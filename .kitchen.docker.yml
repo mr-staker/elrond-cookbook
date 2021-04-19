@@ -1,0 +1,42 @@
+# n.b kitchen-dokken works exclusively with Chef i.e there's no Cinc support
+# Chef Infra Client cannot execute without accepting the license - erm, no
+
+# <% require_relative '.kitchen_patch' %>
+# <% cinc_version = '16.11.7' %>
+
+driver:
+  cinc_version: <%= cinc_version %>
+  name: docker
+  privileged: true
+  volume:
+  - /sys/fs/cgroup:/sys/fs/cgroup:ro
+
+transport:
+  name: docker
+
+provisioner:
+  name: chef_zero
+  product_name: cinc
+  product_version: <%= cinc_version %>
+
+platforms:
+- name: ubuntu
+  driver_config:
+    platform: ubuntu
+    dockerfile: dockerfiles/ubuntu-20.04
+    run_command: /lib/systemd/systemd
+    build_options:
+      tag: kitchen-ubuntu:20.04
+- name: oracle
+  driver_config:
+    platform: rhel
+    dockerfile: dockerfiles/oracle-8.3
+    run_command: /lib/systemd/systemd
+    build_options:
+      tag: kitchen-oracle:8.3
+
+suites:
+- name: elrond
+  run_list:
+  - recipe[spec::default]
+  - recipe[elrond::default]

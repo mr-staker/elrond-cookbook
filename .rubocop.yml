@@ -1,0 +1,7 @@
+# this is literally the style recommended by rubystyle.guide despite what
+# cookstyle says
+Style/PercentLiteralDelimiters:
+  PreferredDelimiters:
+    default: '[]'
+    '%i': '[]'
+    '%w': '[]'

@@ -1,0 +1,41 @@
+FROM ubuntu:20.04
+ENV TERM xterm
+ENV container docker
+VOLUME /sys/fs/cgroup
+ENV LC_ALL C
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN mkdir -p /var/cache/apt/archives && \
+  echo 'APT::Install-Recommends "0"; \n\
+APT::Get::Assume-Yes "true"; \n\
+APT::Install-Suggests "0";' > /etc/apt/apt.conf.d/01buildconfig && \
+  apt-get clean && \
+  apt-get update && \
+  apt-get -y install sudo openssh-server lsb-release systemd systemd-sysv && \
+  # cleanup systemd
+  cd /lib/systemd/system/sysinit.target.wants/; ls | grep -v systemd-tmpfiles-setup | xargs rm -f $1 \
+  rm -f /lib/systemd/system/multi-user.target.wants/*;\
+  rm -f /etc/systemd/system/*.wants/*;\
+  rm -f /lib/systemd/system/local-fs.target.wants/*; \
+  rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+  rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+  rm -f /lib/systemd/system/basic.target.wants/*;\
+  rm -f /lib/systemd/system/anaconda.target.wants/*; \
+  rm -f /lib/systemd/system/plymouth*; \
+  rm -f /lib/systemd/system/systemd-update-utmp* && \
+  rm -f /usr/lib/tmpfiles.d/tmp.conf && \
+  systemctl set-default multi-user.target && \
+  # Enable SSH
+  systemctl enable ssh.service && \
+  # Setup kitchen user with passwordless sudo
+  useradd -d /home/kitchen -m -s /bin/bash kitchen && \
+  (echo kitchen:kitchen | chpasswd) && \
+  mkdir -p /etc/sudoers.d && \
+  # remove /run/nologin which prevents ssh authentication for non-root
+  echo 'kitchen ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers.d/kitchen && \
+  printf "%s\n" '#!/bin/sh' 'rm -f /run/nologin' 'exit 0' > /etc/rc.local
+
+# setup Cinc Client
+RUN apt-get -y install curl ca-certificates && \
+  curl -L https://omnitruck.cinc.sh/install.sh -o /tmp/install.sh && \
+  bash /tmp/install.sh -v <%= @cinc_version %>
