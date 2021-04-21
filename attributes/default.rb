@@ -2,7 +2,7 @@
 default['elrond']['network'] = 'test'
 
 # package version - must be available in staker repo
-default['elrond']['version'] = '1.1.49'
+default['elrond']['version'] = '1.1.50'
 
 # if this is false, it runs keygenerator
 # keygenerator runs only when the key is unavailable
