@@ -36,7 +36,7 @@ platforms:
       tag: kitchen-oracle:8.3
 
 suites:
-- name: elrond
+- name: observer
   run_list:
   - recipe[spec::default]
   - recipe[elrond::default]

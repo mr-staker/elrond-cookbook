@@ -7,7 +7,5 @@ DEPENDENCIES
 
 GRAPH
   elrond (1.0.0)
-    ultimate_config_cookbook (~> 0.1.7)
   spec (1.0.0)
     elrond (>= 0.0.0)
-  ultimate_config_cookbook (0.1.7)

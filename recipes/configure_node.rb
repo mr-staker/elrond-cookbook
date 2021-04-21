@@ -1,8 +1,5 @@
-var_dir = '/opt/var/elrond'
-user = 'elrond-node-0'
-home_dir = "#{var_dir}/node-0"
+var_dir = node['elrond']['system']['var_dir']
 
-# common
 directory var_dir do
   owner 'root'
   group 'root'
@@ -10,52 +7,32 @@ directory var_dir do
   recursive true
 end
 
-# for each service
-group user do
-  system true
+# patch systemd unit template to use environment variables - systemd units are
+# close enough to ini files that this would do
+ini_file '/etc/systemd/system/elrond-node@.service' do
+  file_content(
+    {
+      'Service' => {
+        # allow parameters for template unit
+        'EnvironmentFile' => "#{var_dir}/node-%i/config/service.env",
+        'ExecStart' => '/opt/elrond/bin/node '\
+          '-use-log-view '\
+          '-log-level ${LOG_LEVEL} '\
+          '-rest-api-interface localhost:${REST_API_PORT}',
+      },
+    }
+  )
+  action :edit
 end
 
-user user do
-  gid username
-  home home_dir
-  system true
-  manage_home true
-  shell '/bin/bash'
-end
-
-directory home_dir do
-  owner user
-  group user
-  mode '0700'
-end
-
-# a script would do as well, but this is slighly faster as there's no
-# shelling out
-ruby_block 'copy-config' do
-  block do
-    require 'fileutils'
-
-    # use the config packaged from upstream as template
-    FileUtils.cp_r '/opt/elrond/etc/elrond/node/config', home_dir
-    FileUtils.chown_R user, user, home_dir
+node['elrond']['nodes'].each do |elrond_node|
+  unless elrond_node['id'] >= 0
+    raise %(Error: node['elrond']['nodes'][N]['id'] values must be >= 0)
   end
 
-  not_if { Dir.exist? "#{home_dir}/config" }
-end
-
-# validators must obtain their key from a secure source and have
-# an offsite backup of their keychain
-# this is not automatically generated as the loss of a validator key
-# is catastrophic
-bash 'keygen' do
-  user user
-  cwd "#{home_dir}/config"
-  code '/opt/elrond/bin/keygenerator'
-
-  not_if { ::File.exist? "#{home_dir}/config/validatorKey.pem" }
-  only_if { node['elrond']['node']['validator'] == false }
-end
-
-service 'elrond-node@0' do
-  action %i[enable start]
+  elrond_node "node-#{elrond_node['id']}" do
+    id elrond_node['id']
+    validator elrond_node['validator']
+    key_manager elrond_node['key_manager']
+  end
 end

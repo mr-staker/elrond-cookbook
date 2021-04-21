@@ -6,7 +6,8 @@ link '/opt/chef' do
   not_if { ::File.exist? '/opt/chef' }
 end
 
-ruby_block 'dump_attributes' do
+# allow Serverspec to load the node object via spec_helper
+ruby_block 'dump_node' do
   block do
     File.write '/tmp/node.json', node.to_json
   end

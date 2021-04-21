@@ -22,6 +22,7 @@ describe 'elrond::install' do
       it { should be_enabled }
     end
   end
+  # cookstyle:enable Chef/Style/UsePlatformHelpers
 
   describe package('staker-repo') do
     it { should be_installed }
