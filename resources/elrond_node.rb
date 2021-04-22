@@ -54,8 +54,12 @@ action :config do
   # implemented resources by this cookbook
   # elrond_keygen - generates a key for observers
   # elrond_keyvalut - reads a key from Hashicorp Valut and writes the result to
-  # disk you can define this in a custom cookbook and plug anything that
+  # disk
+  # you can define this in a custom cookbook and plug anything that
   # produces the same end result
+  # n.b send is not a resource, but Object#send
+  # https://apidock.com/ruby/Object/send
+  # the resource is identified by the key_manager property
   send key_manager, "key-#{id}" do
     id id
     validator validator

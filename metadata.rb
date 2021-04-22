@@ -10,3 +10,4 @@ chef_version '>= 12.5'
 end
 license 'MIT'
 description 'Installs and configures Elrond Network nodes'
+gem 'inifile', '~> 3.0.0'
