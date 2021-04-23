@@ -25,6 +25,14 @@ ini_file '/etc/systemd/system/elrond-node@.service' do
   action :edit
 end
 
+# where to seed the node keys
+directory '/opt/etc/elrond/keyvault' do
+  owner 'root'
+  group 'root'
+  mode '0700'
+  recursive true
+end
+
 node['elrond']['nodes'].each do |elrond_node|
   unless elrond_node['id'] >= 0
     raise %(Error: node['elrond']['nodes'][N]['id'] values must be >= 0)

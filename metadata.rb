@@ -11,3 +11,4 @@ end
 license 'MIT'
 description 'Installs and configures Elrond Network nodes'
 gem 'inifile', '~> 3.0.0'
+gem 'vault', '~> 0.16.0'

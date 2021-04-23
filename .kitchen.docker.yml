@@ -40,3 +40,14 @@ suites:
   run_list:
   - recipe[spec::default]
   - recipe[elrond::default]
+- name: validator
+  attributes:
+    elrond:
+      nodes:
+      - id: 0
+        validator: true
+        key_manager: elrond_keyvault
+  run_list:
+  - recipe[spec::default]
+  - recipe[spec::test_vault]
+  - recipe[elrond::default]

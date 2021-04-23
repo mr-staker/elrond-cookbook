@@ -12,5 +12,3 @@ ruby_block 'dump_node' do
     File.write '/tmp/node.json', node.to_json
   end
 end
-
-include_recipe 'spec::test_vault'

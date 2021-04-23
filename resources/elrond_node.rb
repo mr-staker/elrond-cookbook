@@ -3,7 +3,7 @@ provides :elrond_node
 
 property :id, Integer
 property :validator, [true, false], default: false
-property :key_manager, Symbol, default: :elrond_keygen
+property :key_manager, String, default: 'elrond_keygen'
 
 default_action :config
 
@@ -53,14 +53,14 @@ action :config do
   # must produce a "#{home_dir}/config/validatorKey.pem" file
   # implemented resources by this cookbook
   # elrond_keygen - generates a key for observers
-  # elrond_keyvalut - reads a key from Hashicorp Valut and writes the result to
+  # elrond_keyvault - reads a key from Hashicorp Valut and writes the result to
   # disk
   # you can define this in a custom cookbook and plug anything that
   # produces the same end result
   # n.b send is not a resource, but Object#send
   # https://apidock.com/ruby/Object/send
   # the resource is identified by the key_manager property
-  send key_manager, "key-#{id}" do
+  send key_manager.to_sym, "key-#{id}" do
     id id
     validator validator
   end
@@ -74,11 +74,11 @@ action :config do
       LOG_LEVEL=#{node['elrond']['node']['log_level']}
     EOF
 
-    notifies :run, 'execute[elrond-daemon-reload]', :immediately
+    notifies :run, 'execute[elrond-systemctl-daemon-reload]', :immediately
     notifies :restart, "service[elrond-node@#{id}]", :delayed
   end
 
-  execute 'elrond-daemon-reload' do
+  execute 'elrond-systemctl-daemon-reload' do
     command 'systemctl daemon-reload'
     action :nothing
   end

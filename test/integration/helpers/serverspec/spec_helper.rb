@@ -7,6 +7,10 @@ require 'serverspec'
 
 set :backend, :exec
 
+RSpec.configure do |config|
+  config.expect_with(:rspec) { |c| c.syntax = :should }
+end
+
 class ChefNodeWrapper
   def self.node
     @node ||= Chef::Node.from_hash JSON.parse(File.read('/tmp/node.json'))
@@ -15,12 +19,4 @@ end
 
 def node
   ChefNodeWrapper.node
-end
-
-def start_vault
-  system 'vault server -dev > /tmp/vault.out 2>&1 &'
-end
-
-def stop_vault
-  system 'killall vault'
 end

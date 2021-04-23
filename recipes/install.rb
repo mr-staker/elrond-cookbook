@@ -2,7 +2,7 @@
 # management is handed over to the staker-repo package which deals with the
 # repository configuration itself and the signing key rotation
 
-apt_package %w[gnupg2 apt-transport-https] do
+package %w[gnupg2 apt-transport-https] do
   only_if { platform_family? 'debian' }
 end
 

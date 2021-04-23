@@ -17,6 +17,6 @@ default['elrond']['nodes'] = [
     id: 0,
     # these defaults are appropriate for an observer
     validator: false,
-    key_manager: :elrond_keygen,
+    key_manager: 'elrond_keygen', # requires validator = false
   },
 ]

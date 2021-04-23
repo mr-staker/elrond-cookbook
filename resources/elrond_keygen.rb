@@ -13,10 +13,10 @@ action :add do
   user = "elrond-node-#{id}"
   home_dir = "#{node['elrond']['system']['var_dir']}/node-#{id}"
 
-  bash 'keygen' do
+  execute "keygen-#{id}" do
     user user
     cwd "#{home_dir}/config"
-    code '/opt/elrond/bin/keygenerator'
+    command '/opt/elrond/bin/keygenerator'
 
     not_if { ::File.exist? "#{home_dir}/config/validatorKey.pem" }
     # validators must not use this resource

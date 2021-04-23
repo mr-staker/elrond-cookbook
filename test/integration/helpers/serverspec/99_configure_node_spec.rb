@@ -4,10 +4,6 @@ require_relative 'spec_helper'
 # across multiple suites
 
 describe 'elrond::configure_node' do
-  before(:all) do
-    # setup test environment
-  end
-
   describe file('/opt/var/elrond/node-0') do
     it { should be_directory }
   end
@@ -22,14 +18,13 @@ describe 'elrond::configure_node' do
 
   describe file('/opt/var/elrond/node-0/config/validatorKey.pem') do
     it { should exist }
+    it { should be_owned_by 'elrond-node-0' }
+    it { should be_grouped_into 'elrond-node-0' }
+    it { should be_mode '400' }
   end
 
   describe service('elrond-node@0') do
     it { should be_enabled }
     it { should be_running.under('systemd') }
-  end
-
-  after(:all) do
-    # teardown test environment
   end
 end
