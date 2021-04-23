@@ -4,7 +4,7 @@ maintainer_email 'hello@mr.staker.ltd'
 version '1.0.0'
 source_url 'https://github.com/mr-staker/elrond-cookbook'
 issues_url 'https://github.com/mr-staker/elrond-cookbook/issues'
-chef_version '>= 12.5'
+chef_version '>= 16'
 %w[centos debian oracle redhat ubuntu].each do |os|
   supports os
 end

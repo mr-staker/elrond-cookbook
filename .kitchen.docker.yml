@@ -37,12 +37,26 @@ platforms:
 
 suites:
 - name: observer
+  attributes:
+    elrond:
+      network: test
+      version: 1.1.50
+      node:
+        log_level: '*:INFO'
+      nodes:
+      - id: 0
+        validator: false
+        key_manager: elrond_keygen
   run_list:
   - recipe[spec::default]
   - recipe[elrond::default]
 - name: validator
   attributes:
     elrond:
+      network: test
+      version: 1.1.50
+      node:
+        log_level: '*:INFO'
       nodes:
       - id: 0
         validator: true

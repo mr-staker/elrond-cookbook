@@ -42,5 +42,7 @@ node['elrond']['nodes'].each do |elrond_node|
     id elrond_node['id']
     validator elrond_node['validator']
     key_manager elrond_node['key_manager']
+
+    action elrond_node['action'].to_sym if elrond_node['action']
   end
 end

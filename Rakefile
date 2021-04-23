@@ -1,12 +1,41 @@
+require 'yaml'
+
 desc 'Runs cookstyle'
 task :lint do
   sh 'cookstyle'
+end
+
+desc 'Runs test for specifiedd instance and destroy'
+task :test_instance, [:instance] do |_t, args|
+  sh "kitchen verify #{args[:instance]}" # implies create and converge
+  sh "kitchen destroy #{args[:instance]}"
+end
+
+desc 'Runs all tests in sequence and cleans up after every instance'
+task :integration do
+  kcfg = YAML.load_file '.kitchen.yml'
+  kcfg['suites'].each do |pl|
+    platform = pl['name']
+    kcfg['platforms'].each do |su|
+      suite = su['name']
+      instance = "#{platform}-#{suite}"
+
+      puts "Run integration test for #{instance}"
+      Rake::Task[:test_instance].invoke instance
+      Rake::Task[:test_instance].reenable
+    end
+  end
+
+  Rake::Task[:clean].invoke
 end
 
 desc 'Runs concurrent kitchen verify'
 task :verify do
   sh 'kitchen verify -c'
 end
+
+desc 'Runs complete test setup'
+task test: %i[lint integration]
 
 desc 'Cleanup project'
 task :clean do
