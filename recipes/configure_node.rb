@@ -1,15 +1,15 @@
 var_dir = node['elrond']['system']['var_dir']
 version_change = "#{var_dir}/.version_change"
 
-package "elrond-#{node['elrond']['network']}" do
-  version node['elrond']['version']
-end
-
 directory var_dir do
   owner 'root'
   group 'root'
   mode '0755'
   recursive true
+end
+
+package "elrond-#{node['elrond']['network']}" do
+  version node['elrond']['version']
 end
 
 # workaround subscription bug i.e a resource running from witihin
@@ -60,7 +60,7 @@ node['elrond']['nodes'].each do |elrond_node|
 
   elrond_node "node-#{elrond_node['id']}" do
     id elrond_node['id'].to_i
-    validator elrond_node['validator'] == true || false
+    validator elrond_node['validator'] == true
     key_manager elrond_node['key_manager']&.to_sym || :elrond_keygen
     redundancy_level elrond_node['redundancy_level']&.to_i || 0
 

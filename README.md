@@ -57,7 +57,7 @@ For reference, our development tooling is Cinc Workstation.
 | default['elrond']['keyvault']['token'] | Access token. Can be one time use and CIDR scoped for additional security. Only used by the `elrond_keyvault` resource. |
 | default['elrond']['keyvault']['path'] | The mount path for the secrets store. Only KV V2 is supported. Only used by the `elrond_keyvault` resource. |
 | default['elrond']['staking']['agency'] | Staking agency value used to compose NodeDisplayName. Defaults to "MrStaker". |
-| default['elrond']['keybase']['identity'] | The Keybase configured for the node(s). Defaults to "". |
+| default['elrond']['keybase']['identity'] | The Keybase identity configured for the node(s). Defaults to "". |
 
 The elrond nodes attribute is an Array of Hashes containing the following:
 
@@ -69,7 +69,7 @@ The elrond nodes attribute is an Array of Hashes containing the following:
   * `:elrond_keygen` - resource use to generate the `validatorKey.pem` file for a node. Can only be used when `validator = false`. If the key file already exists, the key generator won't trigger.
   * `:elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicopr Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
 
-Technically, the setup of an observer and validator are the same on the server side. The difference is that a validator has a stake transaction and the validatorKey.pem is declared in Elrond Wallet. The differentiation in this setup is the key_manager backend each use.
+Technically, the setup of an observer and validator are the same on the server side. The difference is that a validator has a stake transaction and the node key is uploaded to Elrond Wallet. The differentiation in this setup is the key_manager backend each use.
 
 Each node is setup individually, so you don't have to have only validators or only observers.
 
@@ -90,7 +90,7 @@ The configuration flow:
  * Creates user and group for the service. These are created as system user / group. For security reasons, the node user is not sudo enabled. Each node has it's own user/group.
  * Creates the home directory for the service, which is also the WorkingDirectory for the systemd unit.
  * Creates a distinct copy of the upstream configuration which is bundled with the elrond package build. This is then configured for each particular use case.
- * Deploys the node key via the indicated `key_manager` resource. We provide `elrond_keygen` for observers and `elrond_keystore` for validators as `key_manager` implementations, but any conforming to our specs can be configured in place.
+ * Deploys the node key via the indicated `key_manager` resource. We provide `elrond_keygen` for observers and `elrond_keystore` for validators as `key_manager` implementations, but any conforming to our specs can be configured as plug-in.
 
 There's only one systemd unit which is managing all of the node services. This systemd unit is a template unit, so the services are named, for example: elrond-node@0 (for `id: 0`), elrond-node@1 (for `id: 1`), etc. You get the gist.
 
@@ -101,7 +101,7 @@ There's only one systemd unit which is managing all of the node services. This s
 
 ### Property Parameters
 
- - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself.
+ - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no resource alias).
  - id: the node ID. Must be Integer >= 0.
  - validator: boolean, indicating whether this is a validator node. This property is passed as parameter to the underlying `key_manager` resource.
  - key_manager: string, indicating which `key_manager` resource to use to setup the validatorKey.pem files.
@@ -112,9 +112,10 @@ This is invoked from the `configure_node` recipe by looping over `node['elrond']
 
 ```ruby
 elrond_node "node-#{elrond_node['id']}" do
-  id elrond_node['id']
-  validator elrond_node['validator']
-  key_manager elrond_node['key_manager']
+  id elrond_node['id'].to_i
+  validator elrond_node['validator'] == true
+  key_manager elrond_node['key_manager']&.to_sym || :elrond_keygen
+  redundancy_level elrond_node['redundancy_level']&.to_i || 0
 
   action elrond_node['action'].to_sym if elrond_node['action']
 end
@@ -134,7 +135,7 @@ This resource may be invoked from `elrond_node` when it dispatches dynamically t
 
 #### Property Parameters
 
- - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself.
+ - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no resource alias).
  - id: the node ID. Must be Integer >= 0.
  - validator: boolean, indicating whether this is a validator node. While you can set this to true, the node service will fail to start as no key shall be created.
 
@@ -157,7 +158,7 @@ This resource may be invoked from `elrond_node` when it dispatches dynamically t
 
 #### Property Parameters
 
- - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself.
+ - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no resource alias).
  - id: the node ID. Must be Integer >= 0.
  - validator: boolean, indicating whether this is a validator node. While you can set this to false, the attempt to copy the key from the staging area will fail in this circumstance and it will stop the Chef/Cinc execution with an error.
 
