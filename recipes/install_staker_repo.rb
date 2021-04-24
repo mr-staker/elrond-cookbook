@@ -31,7 +31,3 @@ yum_repository 'staker' do
 end
 
 package 'staker-repo'
-
-package "elrond-#{node['elrond']['network']}" do
-  version node['elrond']['version']
-end

@@ -2,15 +2,16 @@
 
 Cookbook providing the necessary tools to install Elrond nodes (observers and validators). It uses our repositories ([deb](https://deb.staker.ltd/) and [rpm](https://rpm.staker.ltd/)) to install a binary build for the platforms we support.
 
+By convention, the port numbering is as follows:
+
+ * 8080 + node ID - for REST API port (i.e those used by termui and logviewer for example)
+ * 37373 + node ID - for P2P port.
+
 ## TODO
 
 This list isn't sorted in a particular order:
 
- * CLI helper to simplify the access to termui, logviewer, service status in a multi-node environment
- * Complete the work on node config (i.e some bits are missing)
- * Keybase identity
- * Service ID
- * Node roles (i.e primary / backup)
+ * CLI helper to simplify the access to termui, logviewer, service status/control in a multi-node environment
  * Handle one-shot type of upgrades (e.g conditionally drop the db if requested)
  * elrond_node `:remove` action
  * [Observing squad](https://docs.elrond.com/integrators/observing-squad/) recipe
@@ -40,9 +41,9 @@ For reference, our development tooling is Cinc Workstation.
 
 ## Recipes
 
- - `default` - includes `install` and `configure_node`
- - `install` - installs Mr Staker repository (platform dependent) and the appropriate elrong package.
- - `configure_node` - configures Elrond Network nodes based on specific configuration.
+ - `default` - includes `install_staker_repo` and `configure_node`
+ - `install_staker_repo` - installs Mr Staker repository (platform dependent).
+ - `configure_node` - installs and configures Elrond Network nodes based on specific configuration.
 
 ## Attributes
 
@@ -55,19 +56,24 @@ For reference, our development tooling is Cinc Workstation.
 | default['elrond']['keyvault']['address'] | Hashicorp Vault cluster address. Only used by the `elrond_keyvault` resource. |
 | default['elrond']['keyvault']['token'] | Access token. Can be one time use and CIDR scoped for additional security. Only used by the `elrond_keyvault` resource. |
 | default['elrond']['keyvault']['path'] | The mount path for the secrets store. Only KV V2 is supported. Only used by the `elrond_keyvault` resource. |
+| default['elrond']['staking']['agency'] | Staking agency value used to compose NodeDisplayName. Defaults to "MrStaker". |
+| default['elrond']['keybase']['identity'] | The Keybase configured for the node(s). Defaults to "". |
 
 The elrond nodes attribute is an Array of Hashes containing the following:
 
  * `action` - defaults to `:create` ('create' i.e String format is also acceptable). The other accepted value is `:remove` (or 'remove') to destroy a configured node.
  * `id` - indicates the node ID / index. Must be an Integer >= 0.
- * `validator` - indicates whether the node is a validator. If false, the node is setup as observer.
- * `key_manager` - indicates which Chef resource provides the node key. This is a pluggable resource, so you can provide any resource that conforms to the same specification, allowing the use of arbitrary data sources. Our implementation includes:
-  * `elrond_keygen` - resource use to generate the `validatorKey.pem` file for a node. Can only be used when `validator = false`. If the key file already exists, the key generator won't trigger.
-  * `elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicopr Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
+ * `validator` - Default: false. Indicates whether the node is a validator. If false, the node is setup as observer.
+ * `redundancy_level` - Default: 0. Indicates the node redundancy level. -1 = disabled, 0 = main instance (default), 1 = first backup, 2 = second backup, etc.
+ * `key_manager` - Default: :elrond_keygen, indicates which Chef resource provides the node key. This is a pluggable resource, so you can provide any resource that conforms to the same specification, allowing the use of arbitrary data sources. Our implementation includes:
+  * `:elrond_keygen` - resource use to generate the `validatorKey.pem` file for a node. Can only be used when `validator = false`. If the key file already exists, the key generator won't trigger.
+  * `:elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicopr Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
 
 Technically, the setup of an observer and validator are the same on the server side. The difference is that a validator has a stake transaction and the validatorKey.pem is declared in Elrond Wallet. The differentiation in this setup is the key_manager backend each use.
 
 Each node is setup individually, so you don't have to have only validators or only observers.
+
+NodeDisplayName is a concatenated string generated using: "#{node['elrond']['staking']['agency']}-#{node['elrond']['network'].capitalize}-#{node_id}"
 
 ## Libraries
 

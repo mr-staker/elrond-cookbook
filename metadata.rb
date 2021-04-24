@@ -10,5 +10,8 @@ chef_version '>= 16'
 end
 license 'MIT'
 description 'Installs and configures Elrond Network nodes'
+
 gem 'inifile', '~> 3.0.0'
+gem 'deep_merge', '~> 1.2.1'
+gem 'toml', '~> 0.2.0'
 gem 'vault', '~> 0.16.0'

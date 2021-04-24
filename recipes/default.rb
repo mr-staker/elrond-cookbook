@@ -1,2 +1,2 @@
-include_recipe 'elrond::install'
+include_recipe 'elrond::install_staker_repo'
 include_recipe 'elrond::configure_node'

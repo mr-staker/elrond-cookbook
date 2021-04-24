@@ -12,3 +12,11 @@ ruby_block 'dump_node' do
     File.write '/tmp/node.json', node.to_json
   end
 end
+
+package 'iproute' do
+  only_if { platform_family? 'rhel' }
+end
+
+package 'iproute2' do
+  only_if { platform_family? 'debian' }
+end

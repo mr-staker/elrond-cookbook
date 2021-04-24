@@ -3,7 +3,7 @@ require_relative 'spec_helper'
 # this is technically not a helper, but it is a convenient way of sharing tests
 # across multiple suites
 
-describe 'elrond::configure_node' do
+describe 'elrond::configure_node: 0' do
   describe file('/opt/var/elrond/node-0') do
     it { should be_directory }
   end

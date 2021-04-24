@@ -23,23 +23,25 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-resource_name :ini_file
+resource_name :toml_file
 # n.b this is the bit missing from upstream cookbook
 # as consequence it stopped working on Chef/Cinc 16
-provides :ini_file
+provides :toml_file
 
 property :file_path, String, name_property: true
 property :file_content, Hash, {}
 property :file_sensitive, [true, false], default: false
 
-require 'inifile'
+require 'toml'
+# this is another addition as toml_file's own deep_merge is not very reliable
+require 'deep_merge'
 
 # rewrite actions using native resources to track state changes and be able to
 # subscribe / notify
 action :create do
   file new_resource.name do
     path new_resource.file_path
-    content IniFile.new(content: new_resource.file_content).to_s
+    content TOML::Generator.new(new_resource.file_content).body
     sensitive new_resource.file_sensitive
 
     not_if { ::File.exist? new_resource.file_path }
@@ -48,13 +50,13 @@ end
 
 action :edit do
   if ::File.exist?(new_resource.file_path)
-    ini_file = IniFile.load(new_resource.file_path)
-    ini_file = ini_file.merge(new_resource.file_content)
+    current_content = TOML.load_file(new_resource.file_path)
+    new_content = current_content.deep_merge!(new_resource.file_content)
   end
 
   file new_resource.name do
     path new_resource.file_path
-    content ini_file.to_s
+    content TOML::Generator.new(new_content).body
     sensitive new_resource.file_sensitive
 
     only_if { ::File.exist? new_resource.file_path }

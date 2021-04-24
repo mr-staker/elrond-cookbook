@@ -45,8 +45,7 @@ suites:
         log_level: '*:INFO'
       nodes:
       - id: 0
-        validator: false
-        key_manager: elrond_keygen
+      - id: 1
   run_list:
   - recipe[spec::default]
   - recipe[elrond::default]
@@ -60,7 +59,7 @@ suites:
       nodes:
       - id: 0
         validator: true
-        key_manager: elrond_keyvault
+        key_manager: :elrond_keyvault
   run_list:
   - recipe[spec::default]
   - recipe[spec::test_vault]

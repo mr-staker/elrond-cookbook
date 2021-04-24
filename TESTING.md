@@ -16,7 +16,7 @@ gem install kitchen-docker
 
 ## Test Kitchen crash course
 
-A test instance is created for every platform and for every test suite, so, for 2 platform and 2 test suites there's 4 instances. Beware: testing all instances at the same time creates 4 observer nodes on testnet, so the hardware requirements can be substantial. Resource contention can significantly slow things down.
+A test instance is created for every platform and for every test suite, so, for 2 platform and 2 test suites there's 4 instances. Beware: testing all instances at the same time creates 6 nodes on testnet (2 for each observer test instance and 1 for each validator instance), so the hardware requirements can be substantial. Resource contention can significantly slow things down.
 
 ```bash
 # instance status

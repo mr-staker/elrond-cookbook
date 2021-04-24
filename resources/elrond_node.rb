@@ -3,20 +3,24 @@ provides :elrond_node
 
 property :id, Integer
 property :validator, [true, false], default: false
-property :key_manager, String, default: 'elrond_keygen'
+property :key_manager, Symbol, default: :elrond_keygen
+property :redundancy_level, Integer, default: 0
 
 default_action :config
 
 action :config do
-  base_port = 8080
-
   id = new_resource.id
-  validator = new_resource.validator
-  key_manager = new_resource.key_manager
+
+  # conventions
+  rest_api_base_port = 8080
+  p2p_base_port = 37373
 
   user = "elrond-node-#{id}"
   home_dir = "#{node['elrond']['system']['var_dir']}/node-#{id}"
+  node_display_name = "#{node['elrond']['staking']['agency']}-"\
+    "#{node['elrond']['network'].capitalize}-#{id}"
 
+  # resources
   group user do
     system true
   end
@@ -35,18 +39,59 @@ action :config do
     mode '0700'
   end
 
+  # wipe config upon version changes - this shall be cloned from distribution
+  directory "#{home_dir}/config" do
+    recursive true
+
+    subscribes :delete, "elrond-#{node['elrond']['network']}", :immediately
+
+    action :nothing
+  end
+
   # a script would do as well, but this is slighly faster as there's no
   # shelling out and more idiomatic as well
   ruby_block 'copy-config' do
     block do
       require 'fileutils'
 
-      # use the config packaged from upstream as template
+      # use the config packaged from upstream as template config
       FileUtils.cp_r '/opt/elrond/etc/elrond/node/config', home_dir
       FileUtils.chown_R user, user, home_dir
     end
 
     not_if { Dir.exist? "#{home_dir}/config" }
+
+    notifies :restart, "service[elrond-node@#{id}]", :delayed
+  end
+
+  toml_file "#{home_dir}/config/p2p.toml" do
+    file_content(
+      {
+        'Node' => {
+          'Port' => "#{p2p_base_port + id}",
+        },
+      }
+    )
+
+    notifies :restart, "service[elrond-node@#{id}]", :delayed
+
+    action :edit
+  end
+
+  toml_file "#{home_dir}/config/prefs.toml" do
+    file_content(
+      {
+        'Preferences' => {
+          'NodeDisplayName' => node_display_name,
+          'Identity' => node['elrond']['keybase']['identity'],
+          'RedundancyLevel' => new_resource.redundancy_level,
+        },
+      }
+    )
+
+    notifies :restart, "service[elrond-node@#{id}]", :delayed
+
+    action :edit
   end
 
   # pluggable key management - takes properties set by node['elrond']['nodes']
@@ -60,9 +105,11 @@ action :config do
   # n.b send is not a resource, but Object#send
   # https://apidock.com/ruby/Object/send
   # the resource is identified by the key_manager property
-  send key_manager.to_sym, "key-#{id}" do
+  send new_resource.key_manager, "key-#{id}" do
     id id
-    validator validator
+    validator new_resource.validator
+
+    notifies :restart, "service[elrond-node@#{id}]", :delayed
   end
 
   file "#{home_dir}/config/service.env" do
@@ -70,21 +117,18 @@ action :config do
     group user
     mode '0400'
     content <<~EOF
-      REST_API_PORT=#{base_port + id}
+      REST_API_PORT=#{rest_api_base_port + id}
       LOG_LEVEL=#{node['elrond']['node']['log_level']}
     EOF
 
-    notifies :run, 'execute[elrond-systemctl-daemon-reload]', :immediately
     notifies :restart, "service[elrond-node@#{id}]", :delayed
-  end
-
-  execute 'elrond-systemctl-daemon-reload' do
-    command 'systemctl daemon-reload'
-    action :nothing
+    notifies :run, 'execute[service-systemctl-daemon-reload]', :immediately
   end
 
   # this is a template systemd unit hence the @id bit
   service "elrond-node@#{id}" do
+    subscribes :restart, "elrond-#{node['elrond']['network']}", :delayed
+
     action %i[enable start]
   end
 end

@@ -1,5 +1,9 @@
 var_dir = node['elrond']['system']['var_dir']
 
+package "elrond-#{node['elrond']['network']}" do
+  version node['elrond']['version']
+end
+
 directory var_dir do
   owner 'root'
   group 'root'
@@ -22,6 +26,9 @@ ini_file '/etc/systemd/system/elrond-node@.service' do
       },
     }
   )
+
+  notifies :run, 'execute[service-systemctl-daemon-reload]', :immediately
+
   action :edit
 end
 
@@ -39,10 +46,17 @@ node['elrond']['nodes'].each do |elrond_node|
   end
 
   elrond_node "node-#{elrond_node['id']}" do
-    id elrond_node['id']
-    validator elrond_node['validator']
-    key_manager elrond_node['key_manager']
+    id elrond_node['id'].to_i
+    validator elrond_node['validator'] == true || false
+    key_manager elrond_node['key_manager']&.to_sym || :elrond_keygen
+    redundancy_level elrond_node['redundancy_level']&.to_i || 0
 
     action elrond_node['action'].to_sym if elrond_node['action']
   end
+end
+
+execute 'service-systemctl-daemon-reload' do
+  command 'systemctl daemon-reload'
+
+  action :nothing
 end
