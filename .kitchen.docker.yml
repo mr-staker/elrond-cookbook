@@ -40,7 +40,7 @@ suites:
   attributes:
     elrond:
       network: test
-      version: 1.1.50
+      version: 1.1.51
       node:
         log_level: '*:INFO'
       nodes:
@@ -53,7 +53,7 @@ suites:
   attributes:
     elrond:
       network: test
-      version: 1.1.50
+      version: 1.1.51
       node:
         log_level: '*:INFO'
       nodes:

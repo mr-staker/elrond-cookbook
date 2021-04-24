@@ -1,4 +1,5 @@
 var_dir = node['elrond']['system']['var_dir']
+version_change = "#{var_dir}/.version_change"
 
 package "elrond-#{node['elrond']['network']}" do
   version node['elrond']['version']
@@ -9,6 +10,18 @@ directory var_dir do
   group 'root'
   mode '0755'
   recursive true
+end
+
+# workaround subscription bug i.e a resource running from witihin
+# a custom resource fails to subscribe to a resource running from a recipe
+ruby_block 'elrond-version' do
+  block do
+    File.write version_change, node['elrond']['version']
+  end
+
+  subscribes :run, "package[elrond-#{node['elrond']['network']}]", :immediately
+
+  action :nothing
 end
 
 # patch systemd unit template to use environment variables - systemd units are
@@ -59,4 +72,8 @@ execute 'service-systemctl-daemon-reload' do
   command 'systemctl daemon-reload'
 
   action :nothing
+end
+
+file version_change do
+  action :delete
 end

@@ -16,6 +16,7 @@ action :config do
   p2p_base_port = 37373
 
   user = "elrond-node-#{id}"
+  var_dir = node['elrond']['system']['var_dir']
   home_dir = "#{node['elrond']['system']['var_dir']}/node-#{id}"
   node_display_name = "#{node['elrond']['staking']['agency']}-"\
     "#{node['elrond']['network'].capitalize}-#{id}"
@@ -42,10 +43,11 @@ action :config do
   # wipe config upon version changes - this shall be cloned from distribution
   directory "#{home_dir}/config" do
     recursive true
+    only_if { ::File.exist? "#{var_dir}/.version_change" }
 
-    subscribes :delete, "elrond-#{node['elrond']['network']}", :immediately
+    notifies :restart, "service[elrond-node@#{id}]", :delayed
 
-    action :nothing
+    action :delete
   end
 
   # a script would do as well, but this is slighly faster as there's no
@@ -122,13 +124,19 @@ action :config do
     EOF
 
     notifies :restart, "service[elrond-node@#{id}]", :delayed
-    notifies :run, 'execute[service-systemctl-daemon-reload]', :immediately
+    notifies :run, 'execute[elrond-systemctl-daemon-reload]', :immediately
+  end
+
+  # this is a duplication of the resource found in elrond::configure_node
+  # to workaround subscription bug
+  execute 'elrond-systemctl-daemon-reload' do
+    command 'systemctl daemon-reload'
+
+    action :nothing
   end
 
   # this is a template systemd unit hence the @id bit
   service "elrond-node@#{id}" do
-    subscribes :restart, "elrond-#{node['elrond']['network']}", :delayed
-
     action %i[enable start]
   end
 end
