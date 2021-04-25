@@ -1,4 +1,4 @@
-#!/opt/cinc/embedded/bin/ruby
+#!/opt/chef/embedded/bin/ruby
 
 require 'thor'
 
