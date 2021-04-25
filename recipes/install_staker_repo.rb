@@ -7,8 +7,10 @@ package %w[gnupg2 apt-transport-https] do
 end
 
 apt_repository 'staker' do
-  key 'https://keybase.io/saltwaterc/pgp_keys.asc?fingerprint='\
-    "#{node['staker']['key']['fingerprint']}"
+  key node['staker']['key']['fingerprint']
+  # Keybase is rate limited and the silly thing drops packets intead of
+  # returning an actual error
+  keyserver 'keys.openpgp.org'
 
   uri 'https://deb.staker.ltd'
   distribution 'stable'
@@ -21,7 +23,9 @@ end
 yum_repository 'staker' do
   description 'Mr Staker rpm repository'
   baseurl 'https://rpm.staker.ltd/$basearch'
-  gpgkey 'https://keybase.io/saltwaterc/pgp_keys.asc?fingerprint='\
+  # Keybase is rate limited and the silly thing drops packets intead of
+  # returning an actual error
+  gpgkey 'https://keys.openpgp.org/vks/v1/by-fingerprint/'\
     "#{node['staker']['key']['fingerprint']}"
   gpgcheck true
   repo_gpgcheck true
