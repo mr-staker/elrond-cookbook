@@ -66,14 +66,6 @@ cd elrond
 ssh -p $port -i $ssh_private_key $user@$host sudo erctl keybase | xargs touch
 ```
 
-## TODO
-
-This list isn't sorted in a particular order:
-
- * Handle one-shot type of upgrades (e.g conditionally drop the db if requested).
- * Implement `elrond_node` resource `:remove` action.
- * [Observing squad](https://docs.elrond.com/integrators/observing-squad/) recipe. Essentially, this requires Setting up the Elrond proxy and indicate which observers to use for metachain + shards.
-
 ## Requirements
 
 ### Platforms
