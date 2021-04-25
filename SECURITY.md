@@ -1,12 +1,12 @@
 ## Security
 
-Security is an important aspect of running validator nodes. This cookbook made some deliberate changes to the upstream setup procedures to avoid running the Elrond node services under a sudo-enabled user for example. The second example for those changes is that we use separate users for every node service and these services themselves are unable to read another service's config or key i.e they are isolated from each other. They run under system users which lack any special privileges.
+Security is an important aspect of running validator nodes. This cookbook made some deliberate changes to the upstream setup procedures to avoid running the Elrond node services under a sudo-enabled user for example. Another example for those changes is that we use separate users for every node service and these services themselves are unable to read another service's config or key i.e they are isolated from each other. They run under system users which lack any special privileges.
 
 ### Filesystem Security
 
-By default, for validators, the node keys are read from Hashicorp Vault via our `elrond_keyvault` custom Chef/Cinc resource. However, to avoid maintaining a persistent connnection to our Vault which by itself can be a security issue as it would require long lived tokens, the keys are exported locally on the first run. Only the `root` user of the machine has access to the local key store. These keys are also copied over for each node configuration.
+By default, for validators, the node keys are read from Hashicorp Vault via our `elrond_keyvault` custom Chef/Cinc resource. However, to avoid maintaining a persistent connnection to our Vault, which by itself can be a security issue as it would require long lived tokens, the keys are exported locally on the first run. Only the `root` user of the machine has access to the local key store. These keys are also copied over for each node configuration.
 
-The implication of the previous paragraph is that the keys are exported in plaintext for the local filesystem of the server running the node(s). This means, at minimum, full disk encryption is required. This statement is true whether you use our setup tools or the upstream setup tools.
+The implication of the previous paragraph is that the keys are exported in plaintext for the local filesystem of the server running the node(s). This means, at minimum, full disk/stackable filesystem encryption is required. This statement is true whether you use our setup tools or the upstream setup tools.
 
 Cloud services (e.g AWS) provide the possibility for doing EBS encryption for example. Some cloud services do not have this feature. Bare metal servers, even less so. Therefore, additional measures are required, such as LUKS to create a full disk encryption setup. At minimum, in these circumstances, encrypting `/opt` via LUKS or a stackable filesystem encryption scheme (such as ecryptfs or encfs) is required.
 
@@ -14,11 +14,11 @@ Note that you can do LUKS / stackable filesystem encryption even on cloud servic
 
 Essentially, dealing with disk encryption yourself means rebooting a machine has to be personally attended.
 
-Also, these secrets live in memory. There may be a risk for these memory pages to be swapped to disk, so if a swap device is in use, that device must be encrypted. An alternative to disk swapping may be [zram](https://en.wikipedia.org/wiki/Zram) - besides avoding swapping memory pages to disk, in general, it is also faster than disk cache as the system RAM provides much higher bandwidth and much smaller latency compared even with the fastest NVMe SSD's.
+Also, these secrets live in memory. There may be a risk for these memory pages to be swapped to disk, so if a swap device is in use, that device must be encrypted. An alternative to disk swapping may be [zram](https://en.wikipedia.org/wiki/Zram) - besides avoding swapping memory pages to disk, in general, it is also faster than disk swap as the system RAM provides much higher bandwidth and much smaller latency compared even with the fastest NVMe SSD's and the cost in CPU for compress/decompress memory pages is pretty negligible.
 
 ### Network Security
 
-We create the minimum necessary for running the Elrond nodes. All of the API endpoints are bound to 127.0.0.1, so they are not accessible from outside the machine running the nodes. The only publicly available listeners that are created by this cookbook is the P2P node listeners which are necessary for the functioning of the Elrond network itsef.
+We create the minimum necessary for running the Elrond nodes. All of the API endpoints are bound to 127.0.0.1, so they are not accessible from outside the machine running the nodes. The only publicly available listeners that are created by this cookbook are the P2P node listeners which are necessary for the functioning of the Elrond network itsef.
 
 In general terms, only these P2P ports must be accessible from the public internet. Any administrative interface (e.g SSH) should be restricted just to the people who are dealing with the server administration.
 
@@ -39,10 +39,10 @@ It is best to use hardened deployments rather than leaving everything to their d
 
 Should we write any tooling for supporting Elrond Network deployments, we shall make them available for the community.
 
-On top of that, to minimise the potential impact of a kernel vulnerability, dynamic kernel patching is a top recommendation. Examples: Kernel Care (from CloudLinux, does not require CloudLinux itself), Ksplice (for Oracle Cloud customers is included at no additional cost), Canonical Livepatch (for Ubuntu Advantage subscribers). The additional benefit is that it reduced the need for rebooting a machine, therefore minimising the inconvenience of unlocking encrypted filesystems for example.
+On top of that, to minimise the potential impact of a kernel vulnerability, dynamic kernel patching is a top recommendation. Examples: Kernel Care (from CloudLinux, does not require CloudLinux itself), Ksplice (for Oracle Cloud customers is included at no additional cost), Canonical Livepatch (for Ubuntu Advantage subscribers). The additional benefit is that it reduces the need for rebooting a machine, therefore minimising the inconvenience of unlocking encrypted filesystems for example.
 
 ### Memory Security
 
 This is a relatively new field as there's only one maintream vendor who provides such feature: AMD (for their Epyc and Ryzen Pro series). But [when Cloudflare pays attention](https://blog.cloudflare.com/securing-memory-at-epyc-scale/), we pay attention.
 
-This area is still subject to research as for the time being, from the large cloud providers, only [Google has made some definitive progress](https://www.zdnet.com/article/googles-confidential-vms-may-change-the-public-cloud-market/), despite AWS and Oracle having AMD Epyc in their offering. An alternative would be the dedicated server providers who deploy AMD Epyc based servers in their datacentres.
+This area is still subject to research as for the time being, from the large cloud providers, only [Google has made some definitive progress](https://www.zdnet.com/article/googles-confidential-vms-may-change-the-public-cloud-market/), despite AWS and Oracle having AMD Epyc in their offering. An alternative would be the dedicated server providers who deploy AMD Epyc based servers in their datacentres, provided they enable the support.

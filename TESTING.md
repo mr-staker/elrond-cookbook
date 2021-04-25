@@ -2,11 +2,13 @@
 
 You must have:
 
- * Cinc Workstation. This has been developed / tested using [21.3.346](https://cinc.osuosl.org/files/unstable/cinc-workstation/21.3.346/ubuntu/20.04/cinc-workstation_21.3.346-1_amd64.deb). Chef Workstation should work with minor modifications to `.kitchen.docker.yml`.
+ * Cinc Workstation. This cookbook has been developed / tested using [21.3.346](https://cinc.osuosl.org/files/unstable/cinc-workstation/21.3.346/ubuntu/20.04/cinc-workstation_21.3.346-1_amd64.deb). Chef Workstation should work with minor modifications to `.kitchen.docker.yml`.
  * Working Docker setup.
  * kitchen-docker driver.
 
-The`kitchen-docker` driver is, sadly, not part of Workstation anymore as it is missing maintainers, but kitchen-dokken doesn't work with Cinc / thick containers. Install with:
+The`kitchen-docker` driver is, sadly, not part of Workstation anymore. kitchen-dokken doesn't work with Cinc / thick containers.
+
+Install with:
 
 ```bash
 # make sure this runs with Workstation being configured for your shell
@@ -16,7 +18,7 @@ gem install kitchen-docker
 
 ## Test Kitchen crash course
 
-A test instance is created for every platform and for every test suite, so, for 2 platform and 2 test suites there's 4 instances. Beware: testing all instances at the same time creates 6 nodes on testnet (2 for each observer test instance and 1 for each validator instance), so the hardware requirements can be substantial. Resource contention can significantly slow things down.
+A test instance is created for every platform and for every test suite, so, for 2 platform and 2 test suites there's 4 instances. Beware: testing all instances at the same time creates 6 nodes on testnet (2 for each observer test instance and 1 for each validator instance), so the hardware requirements can be substantial. Resource contention can significantly slow things down, so it's recommended not to build/test more than one instance at a time.
 
 ```bash
 # instance status

@@ -15,7 +15,7 @@ There's additional information for specific topics described in these documents:
 
 ## erctl
 
-`erctl` is an utility deployed by this cookbook which saves a few keystrokes for commonly used administrative functions.
+`erctl` is an utility deployed by this cookbook which saves a few keystrokes for commonly used administrative functions. Please note that `erctl` assumes the structure deployed by this cookbook i.e it won't work with upstream config scripts.
 
 Examples:
 
@@ -161,7 +161,7 @@ There's only one systemd unit which is managing all of the node services. This s
 
 ### Property Parameters
 
- - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no resource alias).
+ - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no attribute alias).
  - id: the node ID. Must be Integer >= 0.
  - validator: boolean, indicating whether this is a validator node. This property is passed as parameter to the underlying `key_manager` resource.
  - key_manager: string, indicating which `key_manager` resource to use to setup the validatorKey.pem files.
@@ -195,7 +195,7 @@ This resource may be invoked from `elrond_node` when it dispatches dynamically t
 
 #### Property Parameters
 
- - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no resource alias).
+ - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no attribute alias).
  - id: the node ID. Must be Integer >= 0.
  - validator: boolean, indicating whether this is a validator node. While you can set this to true, the node service will fail to start as no key shall be created.
 
@@ -218,7 +218,7 @@ This resource may be invoked from `elrond_node` when it dispatches dynamically t
 
 #### Property Parameters
 
- - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no resource alias).
+ - name: implicit name property. Only used for naming the resource, but it is not producing any changes in the resource itself (i.e there's no attribute alias).
  - id: the node ID. Must be Integer >= 0.
  - validator: boolean, indicating whether this is a validator node. While you can set this to false, the attempt to copy the key from the staging area will fail in this circumstance and it will stop the Chef/Cinc execution with an error.
 
