@@ -47,9 +47,9 @@ suites:
       - id: 0
       - id: 1
       staking:
-        agency: 'MrStaker'
+        agency: MrStaker
       keybase:
-        identity: 'saltwaterc'
+        identity: mrstaker
   run_list:
   - recipe[spec::default]
   - recipe[elrond::default]
@@ -65,9 +65,9 @@ suites:
         validator: true
         key_manager: :elrond_keyvault
       staking:
-        agency: 'MrStaker'
+        agency: MrStaker
       keybase:
-        identity: 'saltwaterc'
+        identity: mrstaker
   run_list:
   - recipe[spec::default]
   - recipe[spec::test_vault]
