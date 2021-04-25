@@ -11,7 +11,7 @@ There's additional information for specific topics described in these documents:
 
  * [Testing](/TESTING.md) - build, test, and develop using this cookbook.
  * [Upgrading](/UPGRADING.md) - upgrading Elrond nodes.
- * [Security][/SECURITY.md] - our security manifesto.
+ * [Security](/SECURITY.md) - our security manifesto.
 
 ## erctl
 
