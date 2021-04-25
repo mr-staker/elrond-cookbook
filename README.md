@@ -7,6 +7,10 @@ By convention, the port numbering is as follows:
  * 8080 + node ID - for REST API port (i.e those used by termui and logviewer for example)
  * 37373 + node ID - for P2P port.
 
+There's additional information for specific topics described in these documents:
+
+ * [Testing](/TESTING.md)
+
 ## erctl
 
 `erctl` is an utility deployed by this cookbook which saves a few keystrokes for commonly used administrative functions.
