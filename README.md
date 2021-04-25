@@ -205,7 +205,7 @@ This is used implicitly by `elrond_node`.
 
 ### elrond_keyvault
 
-`key_manager` implementation. Reads keys from Hashicorp Vault KV V2 store and exports them into `/opt/etc/elrond/keyvault`. The keys are then copied over for each node in their `config` directory. They are staged into `/opt/etc/elrond/keyvault` as a node configuration may be reset during upgrades, then re-created by the `elrond_node` resource.
+`key_manager` implementation. Reads keys from Hashicorp Vault KV V2 store and exports them into `/opt/etc/elrond/keyvault`. This `keyvault` directory is owned by `root` and it is only available to the `root` user. The keys are then copied over for each node in their `config` directory. They are staged into `/opt/etc/elrond/keyvault` as a node configuration may be reset during upgrades, then re-created by the `elrond_node` resource.
 
 This resource works only when the `validator` property is set to `true`.
 
