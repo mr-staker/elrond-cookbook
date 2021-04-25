@@ -85,17 +85,17 @@ For reference, our development tooling is Cinc Workstation.
 
 | Attribute | Description |
 | --------- | ----------- |
-| default['elrond']['network'] | Indicates which network package to install: main, test, or dev. |
-| default['elrond']['version'] | Indicates which Elrond package build to install. The indicated version must exist in our repository. |
-| default['elrond']['node']['log_level'] | The log level for the Elrond node(s) service(s). |
-| default['elrond']['nodes'] | The list of nodes to create. See details below. |
-| default['elrond']['keyvault']['address'] | Hashicorp Vault cluster address. Only used by the `elrond_keyvault` resource. |
-| default['elrond']['keyvault']['token'] | Access token. Can be one time use and CIDR scoped for additional security. Only used by the `elrond_keyvault` resource. |
-| default['elrond']['keyvault']['path'] | The mount path for the secrets store. Only KV V2 is supported. Only used by the `elrond_keyvault` resource. |
-| default['elrond']['staking']['agency'] | Staking agency value used to compose NodeDisplayName. Defaults to "MrStaker". |
-| default['elrond']['keybase']['identity'] | The Keybase identity configured for the node(s). Defaults to "". |
+| ['elrond']['network'] | Indicates which network package to install: main, test, or dev. |
+| ['elrond']['version'] | Indicates which Elrond package build to install. The indicated version must exist in our repository. |
+| ['elrond']['node']['log_level'] | The log level for the Elrond node(s) service(s). |
+| ['elrond']['nodes'] | The list of nodes to create. See details below. |
+| ['elrond']['keyvault']['address'] | Hashicorp Vault cluster address. Only used by the `elrond_keyvault` resource. |
+| ['elrond']['keyvault']['token'] | Access token. Can be one time use and CIDR scoped for additional security. Only used by the `elrond_keyvault` resource. |
+| ['elrond']['keyvault']['path'] | The mount path for the secrets store. Only KV V2 is supported. Only used by the `elrond_keyvault` resource. |
+| ['elrond']['staking']['agency'] | Staking agency value used to compose NodeDisplayName. |
+| ['elrond']['keybase']['identity'] | The Keybase identity configured for the node(s). |
 
-The elrond nodes attribute is an Array of Hashes containing the following:
+The `['elrond']['nodes']` attribute is an Array of Hashes containing the following:
 
  * `action` - defaults to `:create` ('create' i.e String format is also acceptable). The other accepted value is `:remove` (or 'remove') to destroy a configured node.
  * `id` - indicates the node ID / index. Must be an Integer >= 0.
@@ -105,11 +105,13 @@ The elrond nodes attribute is an Array of Hashes containing the following:
   * `:elrond_keygen` - resource use to generate the `validatorKey.pem` file for a node. Can only be used when `validator = false`. If the key file already exists, the key generator won't trigger.
   * `:elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicopr Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
 
-Technically, the setup of an observer and validator are the same on the server side. The difference is that a validator has a stake transaction and the node key is uploaded to Elrond Wallet. The differentiation in this setup is the key_manager backend each use.
+The stated default values are not set on the attribute itself, but passed down to the elrond_node resource which is consuming the `['elrond']['nodes']` attribute. See the canonical implementation of `elrond_node` from the `configure_node` cookbook.
+
+Technically, the setup of an observer and validator are the same on the server side. The difference is that a validator has a stake transaction and the node key is uploaded to Elrond Wallet. The differentiation in this setup is the `key_manager` backend each use.
 
 Each node is setup individually, so you don't have to have only validators or only observers.
 
-NodeDisplayName is a concatenated string generated using: "#{node['elrond']['staking']['agency']}-#{node['elrond']['network'].capitalize}-#{node_id}"
+`NodeDisplayName` is a concatenated string generated using: "#{node['elrond']['staking']['agency']}-#{node['elrond']['network'].capitalize}-#{node_id}"
 
 ## Libraries
 
