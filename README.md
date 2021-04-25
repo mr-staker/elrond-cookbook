@@ -22,13 +22,14 @@ Examples:
 ```bash
 erctl help
 Commands:
- erctl help [COMMAND]              # Describe available commands or one specific command
- erctl log [--log-level LEVEL] ID  # Spawn logviewer for specified node
- erctl restart ID                  # Invoke systemctl restart elrond-node@ID; requires sudo
- erctl start ID                    # Invoke systemctl start elrond-node@ID; requires sudo
- erctl status ID                   # Invoke systemctl status elrond-node@ID; may require sudo
- erctl stop ID                     # Invoke systemctl stop elrond-node@ID; requires sudo
- erctl ui [--log-level LEVEL] ID   # Spawn termui for specified node
+  erctl help [COMMAND]                     # Describe available commands or one specific command
+  erctl keybase [--format TYPE] [--write]  # Export public BLS keys to be used on Keybase; requires sudo
+  erctl log [--log-level LEVEL] ID         # Spawn logviewer for specified node
+  erctl restart ID                         # Invoke systemctl restart elrond-node@ID; requires sudo
+  erctl start ID                           # Invoke systemctl start elrond-node@ID; requires sudo
+  erctl status ID                          # Invoke systemctl status elrond-node@ID; may require sudo
+  erctl stop ID                            # Invoke systemctl stop elrond-node@ID; requires sudo
+  erctl ui [--log-level LEVEL] ID          # Spawn termui for specified node
 
 erctl help ui
 Usage:
@@ -42,12 +43,27 @@ Spawn termui for specified node
 
 erctl ui 0
 # spawns termui for Elrond node with ID = 0
+
+sudo erctl stop 0
+# stops elrond-node@0 service
 ```
 
 Note that `termui` and `logviewer` do not work in the initial phase (e.g during trie sync) as the API port on the node service is not listening. You can check the current progress via:
 
 ```bash
-erctl status 0
+watch -n 1 erctl status 0
+```
+
+To seed Keybase identity, for example:
+
+```bash
+# run on machine authenticated on Keybase with KBFS mounted - NOT on server
+cd /keybase/public/*
+mkdir -p elrond
+cd elrond
+# this ssh command is invoked against an actual server hosting validators
+# the bit after $host runs remotely then it pipes to a local xargs
+ssh -p $port -i $ssh_private_key $user@$host sudo erctl keybase | xargs touch
 ```
 
 ## TODO

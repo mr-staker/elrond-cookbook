@@ -1,6 +1,8 @@
 #!/opt/chef/embedded/bin/ruby
 
+require 'json'
 require 'thor'
+require 'yaml'
 
 module Erctl
   class CLI < Thor
@@ -10,14 +12,14 @@ module Erctl
 
     desc 'ui [--log-level LEVEL] ID', 'Spawn termui for specified node'
     option 'log-level', type: :string, aliases: %w[-l], default: '*:INFO',
-           desc: 'Elrond logger level(s)'
+                        desc: 'Elrond logger level(s)'
     def ui(id)
       cli 'termui', id
     end
 
     desc 'log [--log-level LEVEL] ID', 'Spawn logviewer for specified node'
     option 'log-level', type: :string, aliases: %w[-l], default: '*:INFO',
-           desc: 'Elrond logger level(s)'
+                        desc: 'Elrond logger level(s)'
     def log(id)
       cli 'logviewer', id
     end
@@ -40,6 +42,35 @@ module Erctl
     desc 'status ID', 'Invoke systemctl status elrond-node@ID; may require sudo'
     def status(id)
       svc __method__, id
+    end
+
+    desc 'keybase [--format TYPE] [--write]', 'Export public BLS keys to be '\
+      'used on Keybase; requires sudo'
+    option :format, type: :string, aliases: %w[-f], default: 'txt',
+                    enum: %w[txt json yml], desc: 'Export type'
+    option :write, type: :boolean, aliases: %w[-w], default: false,
+                   desc: 'Whether to write the export to disk as keybase.TYPE'
+    def keybase
+      keys = []
+
+      Dir['/opt/etc/elrond/keyvault/*.pem'].each do |key|
+        keys << File.read(key)[27, 192]
+      end
+
+      case options[:format]
+      when 'txt'
+        keys = "#{keys.join("\n")}\n"
+      when 'json'
+        keys = "#{keys.to_json}\n"
+      when 'yml'
+        keys = keys.to_yaml
+      end
+
+      if options[:write]
+        return File.write "keybase.#{options[:format]}", keys
+      end
+
+      puts keys
     end
 
     private
