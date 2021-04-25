@@ -7,13 +7,49 @@ By convention, the port numbering is as follows:
  * 8080 + node ID - for REST API port (i.e those used by termui and logviewer for example)
  * 37373 + node ID - for P2P port.
 
+## erctl
+
+`erctl` is an utility deployed by this cookbook which saves a few keystrokes for commonly used administrative functions.
+
+Examples:
+
+```bash
+erctl help
+Commands:
+  erctl help [COMMAND]              # Describe available commands or one specific command
+  erctl log [--log-level LEVEL] ID  # Spawn logviewer for specified node
+  erctl restart ID                  # Invoke systemctl restart elrond-node@ID; requires sudo
+  erctl start ID                    # Invoke systemctl start elrond-node@ID; requires sudo
+  erctl status ID                   # Invoke systemctl status elrond-node@ID; may require sudo
+  erctl stop ID                     # Invoke systemctl stop elrond-node@ID; requires sudo
+  erctl ui [--log-level LEVEL] ID   # Spawn termui for specified node
+
+erctl help ui
+Usage:
+  erctl ui [--log-level LEVEL] ID
+
+Options:
+  -l, [--log-level=LOG-LEVEL]  # Elrond logger level(s)
+                               # Default: *:INFO
+
+Spawn termui for specified node
+
+erctl ui 0
+# spawns termui for Elrond node with ID = 0
+```
+
+Note that `termui` and `logviewer` do not work in the initial phase (e.g during trie sync) as the API port on the node service is not listening. You can check the current progress via:
+
+```bash
+erctl status 0
+```
+
 ## TODO
 
 This list isn't sorted in a particular order:
 
- * CLI helper to simplify the access to termui, logviewer, service status/control in a multi-node environment
  * Handle one-shot type of upgrades (e.g conditionally drop the db if requested)
- * elrond_node `:remove` action
+ * Implement `elrond_node` resource `:remove` action
  * [Observing squad](https://docs.elrond.com/integrators/observing-squad/) recipe
 
 ## Requirements

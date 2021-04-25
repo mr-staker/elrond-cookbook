@@ -1,0 +1,60 @@
+#!/opt/cinc/embedded/bin/ruby
+
+require 'thor'
+
+module Erctl
+  class CLI < Thor
+    def self.exit_on_failure?
+      true
+    end
+
+    desc 'ui [--log-level LEVEL] ID', 'Spawn termui for specified node'
+    option 'log-level', type: :string, aliases: %w[-l], default: '*:INFO',
+           desc: 'Elrond logger level(s)'
+    def ui(id)
+      cli 'termui', id
+    end
+
+    desc 'log [--log-level LEVEL] ID', 'Spawn logviewer for specified node'
+    option 'log-level', type: :string, aliases: %w[-l], default: '*:INFO',
+           desc: 'Elrond logger level(s)'
+    def log(id)
+      cli 'logviewer', id
+    end
+
+    desc 'start ID', 'Invoke systemctl start elrond-node@ID; requires sudo'
+    def start(id)
+      svc __method__, id
+    end
+
+    desc 'stop ID', 'Invoke systemctl stop elrond-node@ID; requires sudo'
+    def stop(id)
+      svc __method__, id
+    end
+
+    desc 'restart ID', 'Invoke systemctl restart elrond-node@ID; requires sudo'
+    def restart(id)
+      svc __method__, id
+    end
+
+    desc 'status ID', 'Invoke systemctl status elrond-node@ID; may require sudo'
+    def status(id)
+      svc __method__, id
+    end
+
+    private
+
+    def cli(cmd, id)
+      addr = "--address 127.0.0.1:#{8080 + id.to_i}"
+      logr = "--log-level #{options['log-level']}"
+
+      Kernel.exec "/opt/elrond/bin/#{cmd} #{addr} #{logr}"
+    end
+
+    def svc(action, id)
+      Kernel.exec "systemctl #{action} elrond-node@#{id.to_i}"
+    end
+  end
+end
+
+Erctl::CLI.start(ARGV)

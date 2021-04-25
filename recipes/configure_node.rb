@@ -36,6 +36,8 @@ ini_file '/etc/systemd/system/elrond-node@.service' do
           '-use-log-view '\
           '-log-level ${LOG_LEVEL} '\
           '-rest-api-interface localhost:${REST_API_PORT}',
+        'Restart' => 'on-failure',
+        'RestartSec' => '15s',
       },
     }
   )
@@ -76,4 +78,11 @@ end
 
 file version_change do
   action :delete
+end
+
+cookbook_file '/usr/bin/erctl' do
+  source 'usr/bin/erctl'
+  owner 'root'
+  group 'root'
+  mode '0755'
 end
