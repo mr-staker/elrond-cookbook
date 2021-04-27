@@ -35,9 +35,7 @@ While most of these attacks are opportunistic, disaster has to strike only once.
 
 ### OS Security
 
-It is best to use hardened deployments rather than leaving everything to their defaults (which may not be great to begin with). Our aim is to follow the [CIS Benchmarks](https://learn.cisecurity.org/benchmarks) w.r.t server security.
-
-Should we write any tooling for supporting Elrond Network deployments, we shall make them available for the community.
+It is best to use hardened deployments rather than leaving everything to their defaults (which may not be great to begin with). Should we write any tooling for supporting Elrond Network deployments, we shall make them available for the community.
 
 On top of that, to minimise the potential impact of a kernel vulnerability, dynamic kernel patching is a top recommendation. Examples: Kernel Care (from CloudLinux, does not require CloudLinux itself), Ksplice (for Oracle Cloud customers is included at no additional cost), Canonical Livepatch (for Ubuntu Advantage subscribers). The additional benefit is that it reduces the need for rebooting a machine, therefore minimising the inconvenience of unlocking encrypted filesystems for example.
 
