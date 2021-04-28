@@ -47,7 +47,7 @@ suites:
       - id: 0
       - id: 1
       staking:
-        agency: MrStaker
+        agency: TestKitchen
       keybase:
         identity: mrstaker
   run_list:
@@ -65,7 +65,7 @@ suites:
         validator: true
         key_manager: :elrond_keyvault
       staking:
-        agency: MrStaker
+        agency: TestKitchen
       keybase:
         identity: mrstaker
   run_list:
