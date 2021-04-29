@@ -13,6 +13,10 @@ There's additional information for specific topics described in these documents:
  * [Upgrading](/UPGRADING.md) - upgrading Elrond nodes.
  * [Security](/SECURITY.md) - our security manifesto.
 
+On Red Hat/CentOS/Oracle Linux, this cookbook provides appropriate support for SELinux (runs in enforcing mode). This is part of the standard configuration and we run within the confines of the SELinux policies.
+
+firewalld is used for all distributions to limit inbound access. firewalld is part of the standard setup on Red Hat/CentOS/Oracle Linux and optional on Debian/Ubuntu, but it is used for all.
+
 ## erctl
 
 `erctl` is an utility deployed by this cookbook which saves a few keystrokes for commonly used administrative functions. Please note that `erctl` assumes the structure deployed by this cookbook i.e it won't work with upstream config scripts.

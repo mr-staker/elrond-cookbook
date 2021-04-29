@@ -42,3 +42,24 @@ task :clean do
   sh 'kitchen destroy -c'
   rm_rf '.kitchen'
 end
+
+def vagrant_task(tsk)
+  desc "Wrap kitchen #{tsk} for vagrant"
+  task tsk do
+    sh "KITCHEN_LOCAL_YAML=.kitchen.vagrant.yml kitchen #{tsk}"
+  end
+end
+
+namespace :vagrant do
+  vagrant_task :status
+  vagrant_task :create
+  vagrant_task :converge
+  vagrant_task :login
+  vagrant_task :verify
+  vagrant_task :destroy
+
+  desc 'kitchen destroy & clean'
+  task clean: %i[destroy] do
+    rm_rf '.kitchen'
+  end
+end

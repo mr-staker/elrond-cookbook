@@ -135,6 +135,14 @@ action :config do
     action :nothing
   end
 
+  # selinux on bare metal servers with the default policy may fail if /opt
+  # is mounted on separate volume hence setting this context
+  semanage_fcontext "#{home_dir}/config/service.env" do
+    type 'systemd_runtime_unit_file_t'
+
+    only_if { platform_family? 'rhel' }
+  end
+
   # this is a template systemd unit hence the @id bit
   service "elrond-node@#{id}" do
     action %i[enable start]

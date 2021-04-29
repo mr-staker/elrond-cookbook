@@ -22,6 +22,8 @@ We create the minimum necessary for running the Elrond nodes. All of the API end
 
 In general terms, only these P2P ports must be accessible from the public internet. Any administrative interface (e.g SSH) should be restricted just to the people who are dealing with the server administration.
 
+On top of that, we configure firewalld for all of our supported platforms.
+
 ### Datacentre Security
 
 This is an area where we have seen actual bad advice given by various members of the Elrond Network Validators Community (n.b these are not representatives of Elrond Network).

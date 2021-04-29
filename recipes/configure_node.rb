@@ -1,3 +1,5 @@
+include_recipe 'elrond::semanage'
+
 var_dir = node['elrond']['system']['var_dir']
 version_change = "#{var_dir}/.version_change"
 
@@ -85,4 +87,6 @@ cookbook_file '/usr/bin/erctl' do
   owner 'root'
   group 'root'
   mode '0755'
+  # not really sensitive, but suppressing the output as it polutes the log
+  sensitive true
 end

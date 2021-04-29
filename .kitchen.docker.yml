@@ -2,7 +2,7 @@
 # Chef Infra Client cannot execute without accepting the license - erm, no
 
 # <% require_relative '.kitchen_patch' %>
-# <% cinc_version = '16.11.7' %>
+# <% require_relative '.kitchen_common' %>
 
 driver:
   cinc_version: <%= cinc_version %>
@@ -40,7 +40,7 @@ suites:
   attributes:
     elrond:
       network: test
-      version: 1.1.51
+      version: <%= elrond_version %>
       node:
         log_level: '*:INFO'
       nodes:
@@ -57,7 +57,7 @@ suites:
   attributes:
     elrond:
       network: test
-      version: 1.1.51
+      version: <%= elrond_version %>
       node:
         log_level: '*:INFO'
       nodes:

@@ -1,0 +1,46 @@
+# <% require_relative '.kitchen_common' %>
+
+driver:
+  cinc_version: <%= cinc_version %>
+  name: vagrant
+  customize:
+    cpus: 2
+    memory: 4096
+    nictype1: virtio
+    nictype2: virtio
+
+transport:
+  name: ssh
+
+provisioner:
+  name: chef_zero
+  product_name: cinc
+  product_version: <%= cinc_version %>
+
+# this uses Oracle only as the purpose is to test those cases which can't be
+# tested easily on Docker i.e SELinux
+platforms:
+- name: oracle
+  driver:
+    box: generic/oracle8
+    box_auto_update: true
+    box_auto_prune: true
+
+suites:
+- name: observer
+  attributes:
+    elrond:
+      network: test
+      version: <%= elrond_version %>
+      node:
+        log_level: '*:INFO'
+      nodes:
+      - id: 0
+      - id: 1
+      staking:
+        agency: TestKitchen
+      keybase:
+        identity: mrstaker
+  run_list:
+  - recipe[spec::default]
+  - recipe[elrond::default]
