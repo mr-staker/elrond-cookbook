@@ -1,4 +1,5 @@
 include_recipe 'elrond::semanage'
+include_recipe 'firewalld::default'
 
 var_dir = node['elrond']['system']['var_dir']
 version_change = "#{var_dir}/.version_change"

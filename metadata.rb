@@ -11,6 +11,8 @@ end
 license 'MIT'
 description 'Installs and configures Elrond Network nodes'
 
+depends 'firewalld', '~> 1.2.1'
+
 gem 'inifile', '~> 3.0.0'
 gem 'deep_merge', '~> 1.2.1'
 gem 'toml', '~> 0.2.0'

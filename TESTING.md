@@ -67,3 +67,7 @@ rake lint
 ## Customise Test Kitchen setup
 
 You can create a `.kitchen.local.yml` file to completely override `.kitchen.yml`. You can base it on our `.kitchen.docker.yml` or use `kitchen-vagrant` if you fancy.
+
+## Troubleshooting
+
+The only known issue is with Test Kitchen running in Docker. Sometimes, something in Docker breaks and the Elrond processes exit with an unexplained stacktrace. The only known solution is to restart the Docker VM.

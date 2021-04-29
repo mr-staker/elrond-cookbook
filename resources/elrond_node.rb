@@ -52,7 +52,7 @@ action :config do
 
   # a script would do as well, but this is slighly faster as there's no
   # shelling out and more idiomatic as well
-  ruby_block 'copy-config' do
+  ruby_block "copy-config-#{id}" do
     block do
       require 'fileutils'
 
@@ -124,12 +124,12 @@ action :config do
     EOF
 
     notifies :restart, "service[elrond-node@#{id}]", :delayed
-    notifies :run, 'execute[elrond-systemctl-daemon-reload]', :immediately
+    notifies :run, "execute[elrond-systemctl-daemon-reload-#{id}]", :immediately
   end
 
   # this is a duplication of the resource found in elrond::configure_node
   # to workaround subscription bug
-  execute 'elrond-systemctl-daemon-reload' do
+  execute "elrond-systemctl-daemon-reload-#{id}" do
     command 'systemctl daemon-reload'
 
     action :nothing
@@ -141,6 +141,32 @@ action :config do
     type 'systemd_runtime_unit_file_t'
 
     only_if { platform_family? 'rhel' }
+  end
+
+  # the firewalld cookbook does not allow service creation
+  template "/etc/firewalld/services/node-#{id}.xml" do
+    source 'etc/firewalld/services/node.xml.erb'
+    owner 'root'
+    group 'root'
+    mode '0644'
+
+    variables(
+      id: id,
+      port: p2p_base_port
+    )
+
+    # while there's a firewalld service resource installed by the firewalld
+    # cookbook, this is not reachable via the notification system from
+    # within a custom resource
+    notifies :run, "execute[restart-firewalld-#{id}]", :immediately
+  end
+
+  execute "restart-firewalld-#{id}" do
+    command 'systemctl restart firewalld'
+  end
+
+  firewalld_service "node-#{id}" do
+    zone 'public'
   end
 
   # this is a template systemd unit hence the @id bit

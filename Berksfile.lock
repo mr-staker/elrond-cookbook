@@ -7,5 +7,7 @@ DEPENDENCIES
 
 GRAPH
   elrond (1.0.0)
+    firewalld (~> 1.2.1)
+  firewalld (1.2.1)
   spec (1.0.0)
     elrond (>= 0.0.0)
