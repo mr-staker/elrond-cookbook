@@ -73,6 +73,13 @@ module Erctl
       puts keys
     end
 
+    desc 'list', 'List the node identifiers on this machine'
+    def list
+      Dir['/opt/var/elrond/node-*'].each do |node|
+        puts File.basename(node)[5..-1]
+      end
+    end
+
     private
 
     def cli(cmd, id)
