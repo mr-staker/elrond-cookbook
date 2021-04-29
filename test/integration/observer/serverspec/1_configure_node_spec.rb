@@ -9,4 +9,9 @@ describe 'elrond::configure_node: 1' do
   describe port(37374) do
     it { should be_listening.on('0.0.0.0').with('tcp') }
   end
+
+  describe file('/etc/firewalld/services/node-1.xml') do
+    it { should be_file }
+    its(:content) { should match 'port="37374"' }
+  end
 end

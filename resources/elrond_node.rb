@@ -12,8 +12,8 @@ action :config do
   id = new_resource.id
 
   # conventions
-  rest_api_base_port = 8080
-  p2p_base_port = 37373
+  rest_api_port = 8080 + id
+  p2p_port = 37373 + id
 
   user = "elrond-node-#{id}"
   var_dir = node['elrond']['system']['var_dir']
@@ -70,7 +70,7 @@ action :config do
     file_content(
       {
         'Node' => {
-          'Port' => "#{p2p_base_port + id}",
+          'Port' => "#{p2p_port}",
         },
       }
     )
@@ -119,7 +119,7 @@ action :config do
     group user
     mode '0400'
     content <<~EOF
-      REST_API_PORT=#{rest_api_base_port + id}
+      REST_API_PORT=#{rest_api_port}
       LOG_LEVEL=#{node['elrond']['node']['log_level']}
     EOF
 
@@ -152,7 +152,7 @@ action :config do
 
     variables(
       id: id,
-      port: p2p_base_port
+      port: p2p_port
     )
 
     # while there's a firewalld service resource installed by the firewalld
