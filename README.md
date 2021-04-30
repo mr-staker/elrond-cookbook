@@ -1,6 +1,6 @@
 # elrond Cookbook
 
-Chef/Cinc cookbook providing the necessary tools to install Elrond nodes (observers and validators). It uses our repositories ([deb](https://deb.staker.ltd/) and [rpm](https://rpm.staker.ltd/)) to install a binary build for the platforms we support. Only one set of binaries it used for all of the services involved for setting up Elrond Network nodes.
+Chef/Cinc cookbook providing the necessary tools to install Elrond nodes (observers and validators). It uses our repositories ([deb](https://deb.staker.ltd/) and [rpm](https://rpm.staker.ltd/)) to install a binary build for the platforms we support. Only one set of binaries it used for all of the services involved for setting up Elrond Network nodes. The packages are built using our [elrond-pkg-build](https://github.com/mr-staker/elrond-pkg-build/) fpm-cookery recipe.
 
 By convention, the port numbering is as follows:
 
@@ -16,6 +16,8 @@ There's additional information for specific topics described in these documents:
 On Red Hat/CentOS/Oracle Linux, this cookbook provides appropriate support for SELinux (runs in enforcing mode). This is part of the standard configuration and we run within the confines of the SELinux policies.
 
 firewalld is used for all distributions to limit inbound access. firewalld is part of the standard setup on Red Hat/CentOS/Oracle Linux and optional on Debian/Ubuntu, but it is used for all.
+
+Hashicorp Vault is used as the initial source of node keys which are then seeded on the nodes. This is only used for validators i.e for observers, the keys are automatically generated.
 
 ## erctl
 
