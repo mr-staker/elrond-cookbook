@@ -1,6 +1,6 @@
 # elrond Cookbook
 
-Cookbook providing the necessary tools to install Elrond nodes (observers and validators). It uses our repositories ([deb](https://deb.staker.ltd/) and [rpm](https://rpm.staker.ltd/)) to install a binary build for the platforms we support. Only one set of binaries it used for all of the services involved for setting up Elrond Network nodes.
+Chef/Cinc cookbook providing the necessary tools to install Elrond nodes (observers and validators). It uses our repositories ([deb](https://deb.staker.ltd/) and [rpm](https://rpm.staker.ltd/)) to install a binary build for the platforms we support. Only one set of binaries it used for all of the services involved for setting up Elrond Network nodes.
 
 By convention, the port numbering is as follows:
 
