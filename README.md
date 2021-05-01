@@ -19,6 +19,8 @@ firewalld is used for all distributions to limit inbound access. firewalld is pa
 
 Hashicorp Vault is used as the initial source of node keys which are then seeded on the nodes. This is only used for validators i.e for observers, the keys are automatically generated.
 
+This [deployment template](https://github.com/mr-staker/elrond-deploy) can help you get you started with the practical aspects of this cookbook.
+
 ## erctl
 
 `erctl` is an utility deployed by this cookbook which saves a few keystrokes for commonly used administrative functions. Please note that `erctl` assumes the structure deployed by this cookbook i.e it won't work with upstream config scripts.
