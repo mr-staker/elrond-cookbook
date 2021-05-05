@@ -133,7 +133,7 @@ Technically, the setup of an observer and validator are the same on the server s
 
 Each node is setup individually, so you don't have to have only validators or only observers.
 
-`NodeDisplayName` is a concatenated string generated using: "#{node['elrond']['staking']['agency']}-#{node['elrond']['network'].capitalize}-#{node_id}"
+`NodeDisplayName` is a concatenated string generated using: "#{node['elrond']['staking']['agency']}-#{node['elrond']['network'].capitalize}-#{node_id}-#{redundancy_level}"
 
 ## Libraries
 

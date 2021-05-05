@@ -15,11 +15,12 @@ action :config do
   rest_api_port = 8080 + id
   p2p_port = 37373 + id
 
+  redundancy_level = new_resource.redundancy_level
   user = "elrond-node-#{id}"
   var_dir = node['elrond']['system']['var_dir']
   home_dir = "#{node['elrond']['system']['var_dir']}/node-#{id}"
   node_display_name = "#{node['elrond']['staking']['agency']}-"\
-    "#{node['elrond']['network'].capitalize}-#{id}"
+    "#{node['elrond']['network'].capitalize}-#{id}-#{redundancy_level}"
 
   # resources
   group user do
@@ -86,7 +87,7 @@ action :config do
         'Preferences' => {
           'NodeDisplayName' => node_display_name,
           'Identity' => node['elrond']['keybase']['identity'],
-          'RedundancyLevel' => new_resource.redundancy_level,
+          'RedundancyLevel' => redundancy_level,
         },
       }
     )
