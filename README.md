@@ -177,7 +177,10 @@ elrond_node "node-#{elrond_node['id']}" do
   validator elrond_node['validator'] == true
   key_manager elrond_node['key_manager']&.to_sym || :elrond_keygen
   redundancy_level elrond_node['redundancy_level']&.to_i || 0
-  destination_shard elrond_node['destination_shard'] || 'disabled'
+
+  if elrond_node['validator'] != true
+    destination_shard elrond_node['destination_shard'] || 'disabled'
+  end
 
   action elrond_node['action'].to_sym if elrond_node['action']
 end
