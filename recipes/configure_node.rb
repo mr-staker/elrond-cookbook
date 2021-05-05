@@ -68,6 +68,7 @@ node['elrond']['nodes'].each do |elrond_node|
     validator elrond_node['validator'] == true
     key_manager elrond_node['key_manager']&.to_sym || :elrond_keygen
     redundancy_level elrond_node['redundancy_level']&.to_i || 0
+    destination_shard elrond_node['destination_shard'] || 'disabled'
 
     action elrond_node['action'].to_sym if elrond_node['action']
   end

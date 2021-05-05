@@ -123,6 +123,7 @@ The `['elrond']['nodes']` attribute is an Array of Hashes containing the followi
  * `id` - indicates the node ID / index. Must be an Integer >= 0.
  * `validator` - Default: false. Indicates whether the node is a validator. If false, the node is setup as observer.
  * `redundancy_level` - Default: 0. Indicates the node redundancy level. -1 = disabled, 0 = main instance (default), 1 = first backup, 2 = second backup, etc.
+ * `destination_shard` - Default: 'disabled'. Indicates which is the destination shard for an observer. Only applied for observer nodes. Possible values: 'disabled' (i.e let the network choose, also for validators), 'metachain' (self explanatory), or a number indicating the shard e.g 0, 1, 2.
  * `key_manager` - Default: :elrond_keygen, indicates which Chef resource provides the node key. This is a pluggable resource, so you can provide any resource that conforms to the same specification, allowing the use of arbitrary data sources. Our implementation includes:
   * `:elrond_keygen` - resource use to generate the `validatorKey.pem` file for a node. Can only be used when `validator = false`. If the key file already exists, the key generator won't trigger.
   * `:elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicopr Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
@@ -176,6 +177,7 @@ elrond_node "node-#{elrond_node['id']}" do
   validator elrond_node['validator'] == true
   key_manager elrond_node['key_manager']&.to_sym || :elrond_keygen
   redundancy_level elrond_node['redundancy_level']&.to_i || 0
+  destination_shard elrond_node['destination_shard'] || 'disabled'
 
   action elrond_node['action'].to_sym if elrond_node['action']
 end

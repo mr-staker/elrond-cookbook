@@ -5,6 +5,7 @@ property :id, Integer
 property :validator, [true, false], default: false
 property :key_manager, Symbol, default: :elrond_keygen
 property :redundancy_level, Integer, default: 0
+property :destination_shard, String, default: 'disabled'
 
 default_action :config
 
@@ -16,6 +17,8 @@ action :config do
   p2p_port = 37373 + id
 
   redundancy_level = new_resource.redundancy_level
+  destination_shard = new_resource.destination_shard
+
   user = "elrond-node-#{id}"
   var_dir = node['elrond']['system']['var_dir']
   home_dir = "#{node['elrond']['system']['var_dir']}/node-#{id}"
@@ -88,6 +91,7 @@ action :config do
           'NodeDisplayName' => node_display_name,
           'Identity' => node['elrond']['keybase']['identity'],
           'RedundancyLevel' => redundancy_level,
+          'DestinationShardAsObserver' => destination_shard,
         },
       }
     )
