@@ -114,7 +114,7 @@ For reference, our development tooling is Cinc Workstation.
 | ['elrond']['keyvault']['address'] | Hashicorp Vault cluster address. Only used by the `elrond_keyvault` resource. |
 | ['elrond']['keyvault']['token'] | Access token. Can be one time use and CIDR scoped for additional security. Only used by the `elrond_keyvault` resource. |
 | ['elrond']['keyvault']['path'] | The mount path for the secrets store. Only KV V2 is supported. Only used by the `elrond_keyvault` resource. |
-| ['elrond']['keyvault']['ssl_ciphers'] | Override the [default](https://www.rubydoc.info/github/hashicorp/vault-ruby/Vault/Defaults#ssl_ciphers-class_method) list of _TLS_ ciphers. You don't need to change this unless your Vault is running in strict TLS 1.3 mode (like ours). Only used by the `elrond_keyvault` resource. |
+| ['elrond']['keyvault']['ssl_ciphers'] | Override the [default](https://www.rubydoc.info/github/hashicorp/vault-ruby/Vault/Defaults#ssl_ciphers-class_method) list of _TLS_ ciphers. You don't need to change this unless your Vault is running in strict TLS 1.3 mode. Only used by the `elrond_keyvault` resource. |
 | ['elrond']['staking']['agency'] | Staking agency value used to compose NodeDisplayName. |
 | ['elrond']['keybase']['identity'] | The Keybase identity configured for the node(s). |
 
