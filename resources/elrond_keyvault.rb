@@ -31,9 +31,9 @@ action :add do
         ::Vault.ssl_ciphers = node['elrond']['keyvault']['ssl_ciphers']
       end
 
-      vault_secret = ::Vault.logical.read "#{path}/data/node/#{id}"
+      vault_secret = ::Vault.kv("#{path}/node").read(id.to_s)
 
-      ::File.write key_path, vault_secret.data[:data][:validator_key]
+      ::File.write key_path, vault_secret.data[:validator_key]
       ::FileUtils.chmod 0400, key_path
     end
 

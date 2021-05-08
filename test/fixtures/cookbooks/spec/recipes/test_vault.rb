@@ -82,14 +82,20 @@ ruby_block 'seed-vault' do
     # give the test-vault service the opportunity to finis restarting
     sleep 2
 
-    path = node['elrond']['keyvault']['path']
-    key_path = "#{Chef::Config[:cookbook_path]}"\
-      '/spec/files/default/validatorKey.pem'
-
     Vault.address = node['elrond']['keyvault']['address']
     Vault.token = node['elrond']['keyvault']['token']
 
-    Vault.logical.write("#{path}/data/node/0", data: {
+    path = node['elrond']['keyvault']['path']
+
+    # mount path
+    Vault.sys.mount("#{path}/node", 'kv', 'KV V2 secret storage', options: {
+      version: '2',
+    })
+
+    key_path = "#{Chef::Config[:cookbook_path]}"\
+      '/spec/files/default/validatorKey.pem'
+
+    Vault.kv("#{path}/node").write('0', {
       validator_key: File.read(key_path),
     })
   end

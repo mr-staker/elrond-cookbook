@@ -13,9 +13,8 @@ describe 'elrond_keyvault' do
     Vault.address = node['elrond']['keyvault']['address']
     Vault.token = node['elrond']['keyvault']['token']
 
-    vault_secret = Vault.logical.read "#{path}/data/node/0"
-
-    key = vault_secret.data[:data][:validator_key]
+    vault_secret = Vault.kv("#{path}/node").read('0')
+    key = vault_secret.data[:validator_key]
 
     it { key.should match '0d7d1723f62337f684229ce4' }
   end
