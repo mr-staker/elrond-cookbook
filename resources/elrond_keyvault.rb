@@ -27,6 +27,10 @@ action :add do
       ::Vault.address = node['elrond']['keyvault']['address']
       ::Vault.token = node['elrond']['keyvault']['token']
 
+      if node['elrond']['keyvault']['ssl_ciphers']
+        ::Vault.ssl_ciphers = node['elrond']['keyvault']['ssl_ciphers']
+      end
+
       vault_secret = ::Vault.logical.read "#{path}/data/node/#{id}"
 
       ::File.write key_path, vault_secret.data[:data][:validator_key]
