@@ -44,6 +44,16 @@ action :config do
     mode '0700'
   end
 
+  # stop service upon upgrade to avoid issues with LevelDB
+  # crashing the config run
+  service "stop-elrond-node-#{id}" do
+    service_name "elrond-node@#{id}"
+
+    only_if { ::File.exist? "#{var_dir}/.version_change" }
+
+    action :stop
+  end
+
   # wipe config upon version changes - this shall be cloned from distribution
   directory "#{home_dir}/config" do
     recursive true
