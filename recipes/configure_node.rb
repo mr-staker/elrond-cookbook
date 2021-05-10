@@ -11,6 +11,11 @@ directory var_dir do
   recursive true
 end
 
+# expire the cache to make sure new versions are being picked up on updates
+execute 'yum clean expire-cache' do
+  only_if { platform_family?('rhel') }
+end
+
 package "elrond-#{node['elrond']['network']}" do
   version node['elrond']['version']
 end
