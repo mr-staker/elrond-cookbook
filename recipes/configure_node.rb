@@ -32,6 +32,27 @@ ruby_block 'elrond-version' do
   action :nothing
 end
 
+# configure journal log sizes
+ini_file '/etc/systemd/journald.conf' do
+  file_content(
+    {
+      'Journal' => {
+        'Storage' => 'persistent',
+        'SystemMaxUse' => '2048M',
+        'SystemMaxFileSize' => '512M',
+      },
+    }
+  )
+
+  notifies :restart, 'service[systemd-journald]', :delayed
+
+  action :edit
+end
+
+service 'systemd-journald' do
+  action %i[enable start]
+end
+
 # patch systemd unit template to use environment variables - systemd units are
 # close enough to ini files that this would do
 ini_file '/etc/systemd/system/elrond-node@.service' do
