@@ -5,3 +5,9 @@ Style/PercentLiteralDelimiters:
     default: '[]'
     '%i': '[]'
     '%w': '[]'
+
+AllCops:
+  NewCops: enable
+
+Layout/LineLength:
+  Max: 80

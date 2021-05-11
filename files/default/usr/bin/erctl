@@ -5,6 +5,7 @@ require 'thor'
 require 'yaml'
 
 module Erctl
+  # implements CLI interface for erctl
   class CLI < Thor
     def self.exit_on_failure?
       true
@@ -27,10 +28,10 @@ module Erctl
     desc 'journal [--grep SEARCH] ID', 'Read stored logs from journald'
     option 'grep', type: :string, aliases: %w[-g], default: '',
                    desc: 'Show entries with MESSAGE matching PATTERN'
-
     def journal(id)
       grep = ''
-      grep = "-g #{options[:grep]}" if options[:grep].length > 0
+      grep = "-g #{options[:grep]}" unless options[:grep].empty?
+
       Kernel.exec "journalctl --unit elrond-node@#{id}.service #{grep}"
     end
 
@@ -60,27 +61,25 @@ module Erctl
                     enum: %w[txt json yml], desc: 'Export type'
     option :write, type: :boolean, aliases: %w[-w], default: false,
                    desc: 'Whether to write the export to disk as keybase.TYPE'
+    option :dict, type: :boolean, aliases: %w[-d], default: false,
+                  desc: 'Whether to return the output as dictionary indexed '\
+                        'by node ID'
     def keybase
-      keys = []
+      node_keys = {}
 
       Dir['/opt/etc/elrond/keyvault/*.pem'].each do |key|
-        keys << File.read(key)[27, 192]
+        id = File.basename(key).to_i
+        node_keys[id] = File.read(key)[27, 192]
       end
 
-      case options[:format]
-      when 'txt'
-        keys = "#{keys.join("\n")}\n"
-      when 'json'
-        keys = "#{keys.to_json}\n"
-      when 'yml'
-        keys = keys.to_yaml
-      end
+      node_keys = node_keys.values unless options[:dict]
+      node_keys = struct_encoder node_keys, options[:format]
 
       if options[:write]
-        return File.write "keybase.#{options[:format]}", keys
+        return File.write "keybase.#{options[:format]}", node_keys
       end
 
-      puts keys
+      puts node_keys
     end
 
     desc 'list', 'List the node identifiers on this machine'
@@ -101,6 +100,26 @@ module Erctl
 
     def svc(action, id)
       Kernel.exec "systemctl #{action} elrond-node@#{id.to_i}"
+    end
+
+    def struct_encoder(struct, format)
+      case format
+      when 'txt'
+        case struct.is_a?
+        when Array
+          "#{struct.join("\n")}\n"
+        when Hash
+          struct = struct.map { |k, v| "#{k},#{v}" }.join("\n")
+          "#{struct}\n"
+        else
+          warn "ERR: unexpected #{struct.class} format for data structure"
+          Kernel.exit 1
+        end
+      when 'json'
+        "#{struct.to_json}\n"
+      when 'yml'
+        struct.to_yaml
+      end
     end
   end
 end
