@@ -31,7 +31,9 @@ Examples:
 erctl help
 Commands:
   erctl help [COMMAND]                     # Describe available commands or one specific command
+  erctl journal [--grep SEARCH] ID         # Read stored logs from journald
   erctl keybase [--format TYPE] [--write]  # Export public BLS keys to be used on Keybase; requires sudo
+  erctl list                               # List the node identifiers on this machine
   erctl log [--log-level LEVEL] ID         # Spawn logviewer for specified node
   erctl restart ID                         # Invoke systemctl restart elrond-node@ID; requires sudo
   erctl start ID                           # Invoke systemctl start elrond-node@ID; requires sudo
