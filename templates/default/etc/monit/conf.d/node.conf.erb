@@ -1,0 +1,8 @@
+check process node-<%= @id %> matching "<%= @api_port %>"
+  start program = "/usr/bin/systemctl start elrond-node@<%= @id %>.service"
+  stop program = "/usr/bin/systemctl stop elrond-node@<%= @id %>.service"
+  if failed
+    port <%= @port %>
+    type tcp
+    expect "\/multistream\/1\.0\.0"
+  then restart

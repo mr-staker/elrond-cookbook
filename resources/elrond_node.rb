@@ -188,6 +188,32 @@ action :config do
   service "elrond-node@#{id}" do
     action %i[enable start]
   end
+
+  # hook in monit
+  template "/etc/monit/conf.d/node-#{id}.conf" do
+    source 'etc/monit/conf.d/node.conf.erb'
+    owner 'root'
+    group 'root'
+    mode '0644'
+
+    variables(
+      id: id,
+      port: p2p_port,
+      api_port: rest_api_port
+    )
+
+    notifies :restart, "service[monit-node-#{id}]", :delayed
+  end
+
+  service "monit-node-#{id}" do
+    service_name 'monit'
+
+    action :nothing
+  end
+
+  execute "monit-syntax-check-#{id}" do
+    command 'monit -t -c /etc/monit/monit.conf'
+  end
 end
 
 # TODO

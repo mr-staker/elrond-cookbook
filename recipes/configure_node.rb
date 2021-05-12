@@ -1,4 +1,5 @@
 include_recipe 'elrond::semanage'
+include_recipe 'elrond::monit'
 include_recipe 'firewalld::default'
 
 var_dir = node['elrond']['system']['var_dir']
@@ -13,7 +14,7 @@ end
 
 # expire the cache to make sure new versions are being picked up on updates
 execute 'yum clean expire-cache' do
-  only_if { platform_family?('rhel') }
+  only_if { platform_family? 'rhel' }
 end
 
 package "elrond-#{node['elrond']['network']}" do
