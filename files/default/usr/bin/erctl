@@ -28,11 +28,17 @@ module Erctl
     desc 'journal [--grep SEARCH] ID', 'Read stored logs from journald'
     option 'grep', type: :string, aliases: %w[-g], default: '',
                    desc: 'Show entries with MESSAGE matching PATTERN'
+    option 'follow', type: :boolean, aliases: %w[-f], default: false,
+                     desc: 'Whether to follow the log'
     def journal(id)
-      grep = ''
-      grep = "-g #{options[:grep]}" unless options[:grep].empty?
+      # while Thor supports passing arbitrary arguments, it doesn't easily
+      # work in conjunction to the already existing id arg as it makes id
+      # positional, which is less than ideal, hence explicit journal options
+      args = []
+      args << "--grep #{options[:grep]}" unless options[:grep].empty?
+      args << '--follow' if options[:follow] == true
 
-      Kernel.exec "journalctl --unit elrond-node@#{id}.service #{grep}"
+      puts "journalctl --unit elrond-node@#{id}.service #{args.join(' ')}"
     end
 
     desc 'start ID', 'Invoke systemctl start elrond-node@ID; requires sudo'

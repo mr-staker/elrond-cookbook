@@ -58,10 +58,10 @@ sudo erctl stop 0
 # stops elrond-node@0 service
 ```
 
-Note that `termui` and `logviewer` do not work in the initial phase (e.g during trie sync) as the API port on the node service is not listening. You can check the current progress via:
+Note that `termui` and `logviewer` do not work in the initial phase (e.g during trie sync) as the API port on the node service is not listening. You can check the service via:
 
 ```bash
-watch -n 1 erctl status 0
+erctl journal 0 --follow
 ```
 
 To seed Keybase identity, for example:
