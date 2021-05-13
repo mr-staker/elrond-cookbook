@@ -38,7 +38,8 @@ module Erctl
       args << "--grep #{options[:grep]}" unless options[:grep].empty?
       args << '--follow' if options[:follow] == true
 
-      puts "journalctl --unit elrond-node@#{id}.service #{args.join(' ')}"
+      Kernel.exec "journalctl --unit elrond-node@#{id}.service "\
+        "#{args.join(' ')}"
     end
 
     desc 'start ID', 'Invoke systemctl start elrond-node@ID; requires sudo'
