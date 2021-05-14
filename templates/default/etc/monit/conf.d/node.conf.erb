@@ -1,4 +1,5 @@
 check process node-<%= @id %> matching "/opt/elrond/bin/node.*-rest-api-interface localhost:<%= @api_port %>"
+  every 5 cycles
   start program = "/usr/bin/systemctl start elrond-node@<%= @id %>.service"
   stop program = "/usr/bin/systemctl stop elrond-node@<%= @id %>.service"
   if failed
