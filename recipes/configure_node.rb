@@ -67,7 +67,7 @@ ini_file '/etc/systemd/system/elrond-node@.service' do
           '-log-level ${LOG_LEVEL} '\
           '-rest-api-interface localhost:${REST_API_PORT}',
         'Restart' => 'always',
-        'RestartSec' => '15s',
+        'RestartSec' => '3',
       },
     }
   )
