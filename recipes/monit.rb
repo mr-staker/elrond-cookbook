@@ -60,3 +60,10 @@ systemd_unit 'monit.service' do
   )
   action %i[create enable restart]
 end
+
+cookbook_file '/usr/bin/monit-cli' do
+  source 'usr/bin/monit-cli'
+  owner 'root'
+  group 'root'
+  mode '0755'
+end

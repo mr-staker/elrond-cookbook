@@ -1,0 +1,3 @@
+#!/bin/bash
+
+monit -c /etc/monit/monit.conf $@

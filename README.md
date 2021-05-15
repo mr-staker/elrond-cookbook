@@ -19,6 +19,8 @@ firewalld is used for all distributions to limit inbound access. firewalld is pa
 
 Hashicorp Vault is used as the initial source of node keys which are then seeded on the nodes. This is only used for validators i.e for observers, the keys are automatically generated.
 
+Additionally, monit is used as secondary daemon monitor for the Elrond node services. Besides the existing daemon monitoring provided by systemd, monit does additional checks for the P2P listener i.e connects to the port and reads the service banner. If the service is not responsive, then it is automatically restarted. systemd is unable to cover the situation where a service is stuck, but the process is still running.
+
 This [deployment template](https://github.com/mr-staker/elrond-deploy) can help you get you started with the practical aspects of this cookbook.
 
 ## erctl
@@ -74,6 +76,88 @@ cd elrond
 # this ssh command is invoked against an actual server hosting validators
 # the bit after $host runs remotely then it pipes to a local xargs
 ssh -p $port -i $ssh_private_key $user@$host sudo erctl keybase | xargs touch
+```
+
+### monit-cli
+
+This is a wrapper for our monit setup. Our monit setup is identical for both Enterprise Linux 8 and Ubuntu 20.04. This provides an easier way to tap into the monit information.
+
+Example:
+
+```bash
+sudo monit-cli summary
+Monit 5.26.0 uptime: 2m
+┌─────────────────────────────────┬────────────────────────────┬───────────────┐
+│ Service Name                    │ Status                     │ Type          │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ b83b891b3536                    │ OK                         │ System        │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ node-1                          │ OK                         │ Process       │
+├─────────────────────────────────┼────────────────────────────┼───────────────┤
+│ node-0                          │ OK                         │ Process       │
+└─────────────────────────────────┴────────────────────────────┴───────────────┘
+
+sudo monit-cli status
+Monit 5.26.0 uptime: 2m
+
+Process 'node-1'
+  status                       OK
+  monitoring status            Monitored
+  monitoring mode              active
+  on reboot                    start
+  pid                          1122
+  parent pid                   1
+  uid                          995
+  effective uid                995
+  gid                          992
+  uptime                       6m
+  threads                      29
+  children                     0
+  cpu                          0.0%
+  cpu total                    0.0%
+  memory                       40.9% [1.5 GB]
+  memory total                 40.9% [1.5 GB]
+  security attribute           -
+  disk read                    0 B/s [963.1 MB total]
+  disk write                   0 B/s [923.7 MB total]
+  port response time           794.687 ms to localhost:37374 type TCP/IP protocol generic
+  data collected               Sat, 15 May 2021 18:54:51
+
+Process 'node-0'
+  status                       OK
+  monitoring status            Monitored
+  monitoring mode              active
+  on reboot                    start
+  pid                          956
+  parent pid                   1
+  uid                          996
+  effective uid                996
+  gid                          993
+  uptime                       8m
+  threads                      9
+  children                     0
+  cpu                          4.3%
+  cpu total                    4.3%
+  memory                       43.5% [1.5 GB]
+  memory total                 43.5% [1.5 GB]
+  security attribute           -
+  disk read                    0 B/s [886.6 MB total]
+  disk write                   0 B/s [378.7 MB total]
+  port response time           215.718 ms to localhost:37373 type TCP/IP protocol generic
+  data collected               Sat, 15 May 2021 18:54:51
+
+System 'b83b891b3536'
+  status                       OK
+  monitoring status            Monitored
+  monitoring mode              active
+  on reboot                    start
+  load average                 [11.98] [9.30] [5.42]
+  cpu                          0.0%us 0.0%sy 0.0%wa
+  memory usage                 3.4 GB [95.0%]
+  swap usage                   648.0 MB [16.5%]
+  uptime                       23m
+  boot time                    Sat, 15 May 2021 18:31:22
+  data collected               Sat, 15 May 2021 18:54:51
 ```
 
 ## Requirements
