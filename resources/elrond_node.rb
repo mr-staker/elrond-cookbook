@@ -216,6 +216,28 @@ action :config do
   end
 end
 
+action :disable do
+  id = new_resource.id
+
+  file "/etc/monit/conf.d/node-#{id}.conf" do
+    notifies :restart, "service[disable-monit-node-#{id}]", :delayed
+
+    action :delete
+  end
+
+  service "disable-monit-node-#{id}" do
+    service_name 'monit'
+
+    action :nothing
+  end
+
+  service "disable-elrond-node-#{id}" do
+    service_name "elrond-node@#{id}"
+
+    action %i[stop disable]
+  end
+end
+
 # TODO
 # action :remove do
 # end

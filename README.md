@@ -206,7 +206,7 @@ For reference, our development tooling is Cinc Workstation.
 
 The `['elrond']['nodes']` attribute is an Array of Hashes containing the following:
 
- * `action` - defaults to `:create` ('create' i.e String format is also acceptable). The other accepted value is `:remove` (or 'remove') to destroy a configured node.
+ * `action` - defaults to `:create` ('create' i.e String format is also acceptable). The other accepted values: `:disable` (or `'disable'`) to disable a node but still keep the configuration; `:remove` (or `'remove'`) to destroy a configured node.
  * `id` - indicates the node ID / index. Must be an Integer >= 0.
  * `validator` - Default: false. Indicates whether the node is a validator. If false, the node is setup as observer.
  * `redundancy_level` - Default: 0. Indicates the node redundancy level. -1 = disabled, 0 = main instance (default), 1 = first backup, 2 = second backup, etc.
