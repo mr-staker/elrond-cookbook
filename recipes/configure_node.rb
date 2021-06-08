@@ -54,27 +54,18 @@ service 'systemd-journald' do
   action %i[enable start]
 end
 
-# patch systemd unit template to use environment variables - systemd units are
-# close enough to ini files that this would do
-ini_file '/etc/systemd/system/elrond-node@.service' do
-  file_content(
-    {
-      'Service' => {
-        # allow parameters for template unit
-        'EnvironmentFile' => "#{var_dir}/node-%i/config/service.env",
-        'ExecStart' => '/opt/elrond/bin/node '\
-          '-use-log-view '\
-          '-log-level ${LOG_LEVEL} '\
-          '-rest-api-interface localhost:${REST_API_PORT}',
-        'Restart' => 'always',
-        'RestartSec' => '3',
-      },
-    }
+template '/etc/systemd/system/elrond-node@.service' do
+  source 'etc/systemd/system/elrond-node@.service.erb'
+  owner 'root'
+  group 'root'
+  mode '0644'
+
+  variables(
+    arwen: node['elrond']['system']['arwen'],
+    var_dir: var_dir
   )
 
   notifies :run, 'execute[service-systemctl-daemon-reload]', :immediately
-
-  action :edit
 end
 
 # where to seed the node keys
