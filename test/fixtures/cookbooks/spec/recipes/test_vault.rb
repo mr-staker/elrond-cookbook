@@ -80,7 +80,7 @@ ruby_block 'seed-vault' do
     require 'vault'
 
     # give the test-vault service the opportunity to finis restarting
-    sleep 2
+    sleep 3
 
     Vault.address = node['elrond']['keyvault']['address']
     Vault.token = node['elrond']['keyvault']['token']

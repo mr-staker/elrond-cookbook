@@ -3,5 +3,5 @@ def cinc_version
 end
 
 def elrond_version
-  '1.1.60.0'
+  '1.1.62.0'
 end
