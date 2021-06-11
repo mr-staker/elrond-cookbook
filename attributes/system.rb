@@ -6,7 +6,8 @@
 force_override['elrond']['system']['var_dir'] = '/opt/var/elrond'
 
 # set whether arwen is built as separate binary or not
-force_override['elrond']['system']['arwen'] = false
-if Gem::Version.new(node['elrond']['version']) < Gem::Version.new('1.1.60.0')
-  force_override['elrond']['system']['arwen'] = true
-end
+# n.b this was experimently unset on testnet for 1.1.60.0, but arwen came back
+# as separate build afterwards - setting to true as it mainly influences the
+# systemd unit template - shall review if this is needed to be addressed
+# in the future
+force_override['elrond']['system']['arwen'] = true
