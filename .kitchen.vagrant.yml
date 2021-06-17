@@ -1,7 +1,7 @@
 # <% require_relative '.kitchen_common' %>
 
 driver:
-  cinc_version: <%= cinc_version %>
+  cinc_version: <%= versions[:cinc] %>
   name: vagrant
   customize:
     cpus: 2
@@ -15,7 +15,7 @@ transport:
 provisioner:
   name: chef_zero
   product_name: cinc
-  product_version: <%= cinc_version %>
+  product_version: <%= versions[:cinc] %>
 
 # this uses Oracle only as the purpose is to test those cases which can't be
 # tested easily on Docker i.e SELinux
@@ -31,7 +31,7 @@ suites:
   attributes:
     elrond:
       network: test
-      version: <%= elrond_version %>
+      version: <%= versions[:elrond] %>
       node:
         log_level: '*:INFO'
       nodes:

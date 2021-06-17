@@ -5,7 +5,7 @@
 # <% require_relative '.kitchen_common' %>
 
 driver:
-  cinc_version: <%= cinc_version %>
+  cinc_version: <%= versions[:cinc] %>
   name: docker
   privileged: true
   volume:
@@ -17,30 +17,30 @@ transport:
 provisioner:
   name: chef_zero
   product_name: cinc
-  product_version: <%= cinc_version %>
+  product_version: <%= versions[:cinc] %>
 
 platforms:
 - name: ubuntu
   driver_config:
     platform: ubuntu
-    dockerfile: dockerfiles/ubuntu:<%= ubuntu_version %>
+    dockerfile: dockerfiles/ubuntu:<%= versions[:ubuntu] %>
     run_command: /lib/systemd/systemd
     build_options:
-      tag: kitchen-ubuntu:<%= ubuntu_version %>
+      tag: kitchen-ubuntu:<%= versions[:ubuntu] %>
 - name: oracle
   driver_config:
     platform: rhel
-    dockerfile: dockerfiles/oracle:<%= oracle_version %>
+    dockerfile: dockerfiles/oracle:<%= versions[:oracle] %>
     run_command: /lib/systemd/systemd
     build_options:
-      tag: kitchen-oracle:<%= oracle_version %>
+      tag: kitchen-oracle:<%= versions[:oracle] %>
 
 suites:
 - name: observer
   attributes:
     elrond:
       network: test
-      version: <%= elrond_version %>
+      version: <%= versions[:elrond] %>
       node:
         log_level: '*:INFO'
       nodes:
@@ -57,7 +57,7 @@ suites:
   attributes:
     elrond:
       network: test
-      version: <%= elrond_version %>
+      version: <%= versions[:elrond] %>
       node:
         log_level: '*:INFO'
       nodes:
