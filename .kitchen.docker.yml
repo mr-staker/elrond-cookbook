@@ -23,17 +23,17 @@ platforms:
 - name: ubuntu
   driver_config:
     platform: ubuntu
-    dockerfile: dockerfiles/ubuntu-20.04
+    dockerfile: dockerfiles/ubuntu:<%= ubuntu_version %>
     run_command: /lib/systemd/systemd
     build_options:
-      tag: kitchen-ubuntu:20.04
+      tag: kitchen-ubuntu:<%= ubuntu_version %>
 - name: oracle
   driver_config:
     platform: rhel
-    dockerfile: dockerfiles/oracle-8.3
+    dockerfile: dockerfiles/oracle:<%= oracle_version %>
     run_command: /lib/systemd/systemd
     build_options:
-      tag: kitchen-oracle:8.3
+      tag: kitchen-oracle:<%= oracle_version %>
 
 suites:
 - name: observer
