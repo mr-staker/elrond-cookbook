@@ -5,7 +5,7 @@ Chef/Cinc cookbook providing the necessary tools to install Elrond nodes (observ
 By convention, the port numbering is as follows:
 
  * 8080 + node ID - for REST API port (i.e those used by termui and logviewer for example). These ports are bound to localhost/127.0.0.1.
- * 37373 + node ID - for P2P port.
+ * 37373 + node ID - for P2P port (37373 is configurable).
 
 There's additional information for specific topics described in these documents:
 
@@ -196,6 +196,7 @@ For reference, our development tooling is Cinc Workstation.
 | ['elrond']['network'] | Indicates which network package to install: main, test, or dev. |
 | ['elrond']['version'] | Indicates which Elrond package build to install. The indicated version must exist in our repository. |
 | ['elrond']['node']['log_level'] | The log level for the Elrond node(s) service(s). |
+| ['elrond']['node']['base_p2p_port'] | Default: 37373. The base port for P2P communication. |
 | ['elrond']['nodes'] | The list of nodes to create. See details below. |
 | ['elrond']['keyvault']['address'] | Hashicorp Vault cluster address. Only used by the `elrond_keyvault` resource. |
 | ['elrond']['keyvault']['token'] | Access token. Can be one time use and CIDR scoped for additional security. Only used by the `elrond_keyvault` resource. |

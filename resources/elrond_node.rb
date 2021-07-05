@@ -14,7 +14,7 @@ action :config do
 
   # conventions
   rest_api_port = 8080 + id
-  p2p_port = 37373 + id
+  p2p_port = node['elrond']['node']['base_p2p_port'] + id
 
   redundancy_level = new_resource.redundancy_level
   destination_shard = new_resource.destination_shard
@@ -35,7 +35,8 @@ action :config do
     home home_dir
     system true
     manage_home true
-    shell '/bin/bash'
+    shell '/sbin/nologin'
+    action %i[create manage]
   end
 
   directory home_dir do
