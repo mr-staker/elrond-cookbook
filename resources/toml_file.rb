@@ -32,7 +32,7 @@ property :file_path, String, name_property: true
 property :file_content, Hash, {}
 property :file_sensitive, [true, false], default: false
 
-require 'toml'
+require 'toml-rb'
 # this is another addition as toml_file's own deep_merge is not very reliable
 require 'deep_merge'
 
@@ -41,7 +41,7 @@ require 'deep_merge'
 action :create do
   file new_resource.name do
     path new_resource.file_path
-    content TOML::Generator.new(new_resource.file_content).body
+    content TomlRB.dump(new_resource.file_content)
     sensitive new_resource.file_sensitive
 
     not_if { ::File.exist? new_resource.file_path }
@@ -50,13 +50,13 @@ end
 
 action :edit do
   if ::File.exist?(new_resource.file_path)
-    current_content = TOML.load_file(new_resource.file_path)
+    current_content = TomlRB.load_file(new_resource.file_path)
     new_content = current_content.deep_merge!(new_resource.file_content)
   end
 
   file new_resource.name do
     path new_resource.file_path
-    content TOML::Generator.new(new_content).body
+    content TomlRB.dump(new_content)
     sensitive new_resource.file_sensitive
 
     only_if { ::File.exist? new_resource.file_path }
