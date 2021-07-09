@@ -68,6 +68,11 @@ suites:
         agency: TestKitchen
       keybase:
         identity: mrstaker
+      keyvault:
+        # these (except token) are defaults for Vault in dev mode
+        address: http://127.0.0.1:8200
+        token: uSmsRvfyoj4DtJdcT5ewCuPa
+        path: elrond
   run_list:
   - recipe[spec::default]
   - recipe[spec::test_vault]

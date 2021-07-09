@@ -1,4 +1,4 @@
-# setup a test Hashicorp vault to simulate a validator
+# setup a test Hashicorp Vault to simulate a validator
 # technically, the node itself is still an observer as for an actual validator
 # you need to stake, but the idea is to simulate the key management capabilities
 # of the elrond_keyvault resource
