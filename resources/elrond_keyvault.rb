@@ -17,28 +17,17 @@ action :add do
   # n.b this only supports Vault KV V2 paths
   key_path = "/opt/etc/elrond/keyvault/#{id}.pem"
 
-  ruby_block "export-vault-key-#{id}" do
-    block do
-      require 'vault'
-      require 'fileutils'
+  vault_export "export-vault-key-#{id}" do
+    file_path key_path
 
-      path = node['elrond']['keyvault']['path']
+    address node['elrond']['keyvault']['address']
+    token node['elrond']['keyvault']['token']
 
-      ::Vault.address = node['elrond']['keyvault']['address']
-      ::Vault.token = node['elrond']['keyvault']['token']
-
-      if node['elrond']['keyvault']['ssl_ciphers']
-        ::Vault.ssl_ciphers = node['elrond']['keyvault']['ssl_ciphers']
-      end
-
-      vault_secret = ::Vault.kv("#{path}/node").read(id.to_s)
-
-      ::File.write key_path, vault_secret.data[:validator_key]
-      ::FileUtils.chmod 0400, key_path
-    end
+    secret_path "#{node['elrond']['keyvault']['path']}/node"
+    secret_name id.to_s
+    secret_key :validator_key
 
     only_if { validator == true }
-    not_if { ::File.exist? key_path }
   end
 
   # copy key from system store to config dir

@@ -214,7 +214,7 @@ The `['elrond']['nodes']` attribute is an Array of Hashes containing the followi
  * `destination_shard` - Default: 'disabled'. Indicates which is the destination shard for an observer. Only applied for observer nodes. Possible values: 'disabled' (i.e let the network choose, also for validators), 'metachain' (self explanatory), or a number indicating the shard e.g 0, 1, 2.
  * `key_manager` - Default: :elrond_keygen, indicates which Chef resource provides the node key. This is a pluggable resource, so you can provide any resource that conforms to the same specification, allowing the use of arbitrary data sources. Our implementation includes:
   * `:elrond_keygen` - resource use to generate the `validatorKey.pem` file for a node. Can only be used when `validator = false`. If the key file already exists, the key generator won't trigger.
-  * `:elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicopr Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
+  * `:elrond_keystore` - resource used to fetch the `validatorKey.pem` file for a node from a Hashicorp Vault cluster. Can only be used when `validator = true`. The initial vault export only triggers once per node due to the nature of the keys, so this resource doesn't require persistent access to the Vault, unless new keys need to be read. The keys are staged, then copied into each node's `config` directory.
 
 The stated default values are not set on the attribute itself, but passed down to the elrond_node resource which is consuming the `['elrond']['nodes']` attribute. See the canonical implementation of `elrond_node` from the `configure_node` cookbook.
 
@@ -304,7 +304,6 @@ This resource works only when the `validator` property is set to `true`.
 
 This resource may be invoked from `elrond_node` when it dispatches dynamically the `key_manager` resource based on `node['elrond']['nodes']` configuration.
 
-
 #### Actions
 
  - `:add`: Export validatorKey.pem from Hashicorp Vault and configure for indicated node.
@@ -318,6 +317,28 @@ This resource may be invoked from `elrond_node` when it dispatches dynamically t
 #### Examples
 
 This is used implicitly by `elrond_node`.
+
+### vault_export
+
+`vault_export` is a resource used by `elrond_keyvault` to export a key value from Hashicorp Vault to the local filesystem to be consumed by an Elrond node process.
+
+#### Actions
+
+ - `:export`: Export secret from Hashicorp Vault to local filesystem.
+
+#### Property Parameters
+
+ - file_path: the file path where to save the exported secret. This is the name property for this custom resource.
+ - address: Hashicorp Vault server address.
+ - token: Hashicorp Vault access token.
+ - secret_path: the Hashicorp Vault path to the KV secret.
+ - secret_name: the name of the secret stored in Hashicorp Vault.
+ - secret_key: the key of the key/value pair stored in Hashicorp Vault KV2 secret storage.
+ - ssl_ciphers: allows custom definitions for vault-ruby's ssl_ciphers configuration option.
+
+#### Examples
+
+This is used implicitly by `elrond_keyvault`.
 
 ## Usage
 
