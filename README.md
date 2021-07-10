@@ -333,8 +333,8 @@ This is used implicitly by `elrond_node`.
  - token: Hashicorp Vault access token.
  - secret_path: the Hashicorp Vault path to the KV secret.
  - secret_name: the name of the secret stored in Hashicorp Vault.
- - secret_key: the key of the key/value pair stored in Hashicorp Vault KV2 secret storage.
- - ssl_ciphers: allows custom definitions for vault-ruby's ssl_ciphers configuration option.
+ - secret_key: optional, the key of the key/value pair stored in Hashicorp Vault KV2 secret storage. If unspecified, the secret KV structure is exported and serialised as YAML.
+ - ssl_ciphers: optional, allows custom definitions for vault-ruby's ssl_ciphers configuration option.
 
 #### Examples
 
