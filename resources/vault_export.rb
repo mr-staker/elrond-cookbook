@@ -6,7 +6,7 @@ property :address, String, required: true
 property :token, String, required: true
 property :secret_path, String, required: true
 property :secret_name, String, required: true
-property :secret_key, Symbol, required: true
+property :secret_key, Symbol
 property :ssl_ciphers, String
 
 default_action :export
@@ -34,7 +34,12 @@ action :export do
 
       secret = ::Vault.kv(secret_path).read(secret_name)
 
-      ::File.write file_path, secret.data[secret_key]
+      if secret_key
+        ::File.write file_path, secret.data[secret_key]
+      else
+        ::File.write file_path, YAML.dump(secret.data)
+      end
+
       ::FileUtils.chmod 0400, file_path
     end
 
