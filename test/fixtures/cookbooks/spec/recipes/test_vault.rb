@@ -79,7 +79,7 @@ ruby_block 'seed-vault' do
   block do
     require 'vault'
 
-    # give the test-vault service the opportunity to finis restarting
+    # give the test-vault service the opportunity to finish restarting
     sleep 3
 
     Vault.address = node['elrond']['keyvault']['address']

@@ -7,7 +7,7 @@ property :token, String, required: true
 property :secret_path, String, required: true
 property :secret_name, String, required: true
 property :secret_key, Symbol, required: true
-property :ssl_ciphers, String, default: ''
+property :ssl_ciphers, String
 
 default_action :export
 
@@ -28,7 +28,7 @@ action :export do
       ::Vault.address = address
       ::Vault.token = token
 
-      unless ssl_ciphers.length.zero?
+      if ssl_ciphers
         ::Vault.ssl_ciphers = ssl_ciphers
       end
 
