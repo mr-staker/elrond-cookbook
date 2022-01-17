@@ -3,7 +3,7 @@
 You must have:
 
  * Cinc Workstation. This cookbook has been developed / tested using [21.3.346](https://cinc.osuosl.org/files/unstable/cinc-workstation/21.3.346/ubuntu/20.04/cinc-workstation_21.3.346-1_amd64.deb). Chef Workstation should work with minor modifications to `.kitchen.docker.yml`.
- * Working Docker setup.
+ * Working Docker setup. This must run under a system with systemd. If you're using Docker Desktop on Windows with WSL2 backend, then [genie](https://github.com/arkane-systems/genie) must be used to setup systemd as init.
  * kitchen-docker driver.
 
 The`kitchen-docker` driver is, sadly, not part of Workstation anymore. kitchen-dokken doesn't work with Cinc / thick containers.
