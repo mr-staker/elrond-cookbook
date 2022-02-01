@@ -1,5 +1,6 @@
 resource_name :elrond_node
 provides :elrond_node
+unified_mode false
 
 property :id, Integer
 property :validator, [true, false], default: false

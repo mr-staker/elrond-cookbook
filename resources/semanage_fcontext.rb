@@ -1,5 +1,6 @@
 resource_name :semanage_fcontext
 provides :semanage_fcontext
+unified_mode false
 
 property :path, String, name_property: true
 property :type, String

@@ -1,5 +1,6 @@
 resource_name :elrond_keygen
 provides :elrond_keygen
+unified_mode false
 
 property :id, Integer
 property :validator, [true, false], default: false

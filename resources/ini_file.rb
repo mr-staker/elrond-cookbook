@@ -27,9 +27,10 @@ resource_name :ini_file
 # n.b this is the bit missing from upstream cookbook
 # as consequence it stopped working on Chef/Cinc 16
 provides :ini_file
+unified_mode false
 
 property :file_path, String, name_property: true
-property :file_content, Hash, {}
+property :file_content, Hash, default: {}
 property :file_sensitive, [true, false], default: false
 
 require 'inifile'

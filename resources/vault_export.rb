@@ -1,5 +1,6 @@
 resource_name :vault_export
 provides :vault_export
+unified_mode false
 
 property :file_path, String, name_property: true
 property :address, String, required: true

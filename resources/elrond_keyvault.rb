@@ -1,5 +1,6 @@
 resource_name :elrond_keyvault
 provides :elrond_keyvault
+unified_mode false
 
 property :id, Integer
 property :validator, [true, false], default: true
