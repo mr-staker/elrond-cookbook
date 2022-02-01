@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 resource_name :semanage_fcontext
 provides :semanage_fcontext
 unified_mode false
@@ -14,11 +16,11 @@ action :set do
   type = new_resource.type
 
   bash "semanage-fcontext-#{path}" do
-    code <<~EOF
+    code <<~CODE
       set -e
       semanage fcontext --add --type #{type} #{path}
       restorecon #{path}
-    EOF
+    CODE
 
     only_if 'selinuxenabled'
     not_if "ls -Z #{path} | grep #{type}"

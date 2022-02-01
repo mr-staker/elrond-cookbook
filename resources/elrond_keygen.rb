@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 resource_name :elrond_keygen
 provides :elrond_keygen
 unified_mode false

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 resource_name :elrond_keyvault
 provides :elrond_keyvault
 unified_mode false
@@ -36,7 +38,7 @@ action :add do
     owner user
     group user
     mode '0400'
-    content lazy { ::File.read key_path }
+    content(lazy { ::File.read key_path })
     sensitive true
   end
 end

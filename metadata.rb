@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 name 'elrond'
 maintainer 'Mr Staker'
 maintainer_email 'hello@mr.staker.ltd'

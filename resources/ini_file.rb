@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Cookbook:: ultimate_config_cookbook - borrowed from
 #
 # The MIT License (MIT)
@@ -68,9 +70,7 @@ action :create_or_edit do
 end
 
 action :delete do
-  if ::File.exist?(new_resource.file_path)
-    ::File.delete(new_resource.file_path)
-  end
+  ::File.delete(new_resource.file_path) if ::File.exist?(new_resource.file_path)
 end
 
 action :replace do

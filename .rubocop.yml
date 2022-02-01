@@ -5,6 +5,22 @@ Style/PercentLiteralDelimiters:
     default: '[]'
     '%i': '[]'
     '%w': '[]'
+    '%': '[]'
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: single_quotes
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: no_comma
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: no_comma
+
+Metrics/BlockLength:
+  Max: 150
 
 AllCops:
   NewCops: enable

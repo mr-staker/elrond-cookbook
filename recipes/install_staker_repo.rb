@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # runs through repository bootstrap - past this point, the actual
 # management is handed over to the staker-repo package which deals with the
 # repository configuration itself and the signing key rotation
@@ -26,7 +28,7 @@ yum_repository 'staker' do
   # Keybase is rate limited and the silly thing drops packets intead of
   # returning an actual error
   gpgkey 'https://keys.openpgp.org/vks/v1/by-fingerprint/'\
-    "#{node['staker']['key']['fingerprint']}"
+         "#{node['staker']['key']['fingerprint']}"
   gpgcheck true
   repo_gpgcheck true
 

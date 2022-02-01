@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # setup a test Hashicorp Vault to simulate a validator
 # technically, the node itself is still an observer as for an actual validator
 # you need to stake, but the idea is to simulate the key management capabilities
@@ -45,20 +47,20 @@ systemd_unit 'test-vault.service' do
     {
       Unit: {
         Description: 'test-vault',
-        After: 'network.target',
+        After: 'network.target'
       },
       Service: {
         User: 'test-vault',
         Environment: [
           '"VAULT_DEV_ROOT_TOKEN_ID='\
-            "#{node['elrond']['keyvault']['token']}\"",
-          %("VAULT_ADDR=#{node['elrond']['keyvault']['address']}"),
+          "#{node['elrond']['keyvault']['token']}\"",
+          %["VAULT_ADDR=#{node['elrond']['keyvault']['address']}"]
         ],
-        ExecStart: '/usr/bin/vault server -dev -dev-no-store-token',
+        ExecStart: '/usr/bin/vault server -dev -dev-no-store-token'
       },
       Install: {
-        WantedBy: 'multi-user.target',
-      },
+        WantedBy: 'multi-user.target'
+      }
     }
   )
   action %i[create enable restart]
@@ -69,10 +71,10 @@ end
 file '/home/kitchen/.bash_aliases' do
   owner 'kitchen'
   group 'kitchen'
-  content <<~EOF
+  content <<~CONTENT
     export VAULT_TOKEN=#{node['elrond']['keyvault']['token']}
     export VAULT_ADDR=#{node['elrond']['keyvault']['address']}
-  EOF
+  CONTENT
 end
 
 ruby_block 'seed-vault' do
@@ -88,15 +90,23 @@ ruby_block 'seed-vault' do
     path = node['elrond']['keyvault']['path']
 
     # mount path
-    Vault.sys.mount("#{path}/node", 'kv', 'KV V2 secret storage', options: {
-      version: '2',
-    })
+    Vault.sys.mount(
+      "#{path}/node",
+      'kv',
+      'KV V2 secret storage',
+      options: {
+        version: '2'
+      }
+    )
 
     key_path = "#{Chef::Config[:cookbook_path]}"\
-      '/spec/files/default/validatorKey.pem'
+               '/spec/files/default/validatorKey.pem'
 
-    Vault.kv("#{path}/node").write('0', {
-      validator_key: File.read(key_path),
-    })
+    Vault.kv("#{path}/node").write(
+      '0',
+      {
+        validator_key: File.read(key_path)
+      }
+    )
   end
 end

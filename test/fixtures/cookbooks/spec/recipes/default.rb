@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # allow test-kitchen busser to continue working as if this is Chef
 # Cinc Workstation may be a bit inconsitent depending on which client is used
 # on the box and kitchen driver

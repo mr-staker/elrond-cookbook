@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 describe 'elrond::configure_node: 1' do
@@ -6,7 +8,7 @@ describe 'elrond::configure_node: 1' do
     it { should be_running.under('systemd') }
   end
 
-  describe port(37374) do
+  describe port(37_374) do
     it { should be_listening.on('0.0.0.0').with('tcp') }
   end
 

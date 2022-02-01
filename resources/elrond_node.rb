@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 resource_name :elrond_node
 provides :elrond_node
 unified_mode false
@@ -24,7 +26,8 @@ action :config do
   var_dir = node['elrond']['system']['var_dir']
   home_dir = "#{node['elrond']['system']['var_dir']}/node-#{id}"
   node_display_name = "#{node['elrond']['staking']['agency']}-"\
-    "#{node['elrond']['network'].capitalize}-#{id}-#{redundancy_level}"
+                      "#{node['elrond']['network'].capitalize}-"\
+                      "#{id}-#{redundancy_level}"
 
   # resources
   group user do
@@ -86,8 +89,8 @@ action :config do
     file_content(
       {
         'Node' => {
-          'Port' => "#{p2p_port}",
-        },
+          'Port' => p2p_port.to_s
+        }
       }
     )
 
@@ -103,8 +106,8 @@ action :config do
           'NodeDisplayName' => node_display_name,
           'Identity' => node['elrond']['keybase']['identity'],
           'RedundancyLevel' => redundancy_level,
-          'DestinationShardAsObserver' => destination_shard,
-        },
+          'DestinationShardAsObserver' => destination_shard
+        }
       }
     )
 
@@ -135,10 +138,10 @@ action :config do
     owner user
     group user
     mode '0400'
-    content <<~EOF
+    content <<~CONTENT
       REST_API_PORT=#{rest_api_port}
       LOG_LEVEL=#{node['elrond']['node']['log_level']}
-    EOF
+    CONTENT
 
     notifies :restart, "service[elrond-node@#{id}]", :delayed
     notifies :run, "execute[elrond-systemctl-daemon-reload-#{id}]", :immediately

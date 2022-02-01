@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # setup epel
 package 'epel-release' do
   only_if { platform? 'redhat', 'centos', 'amazon' }
@@ -43,7 +45,7 @@ systemd_unit 'monit.service' do
     {
       Unit: {
         Description: 'daemon monitoring daemon',
-        After: 'network.target',
+        After: 'network.target'
       },
       Service: {
         Type: 'simple',
@@ -51,11 +53,11 @@ systemd_unit 'monit.service' do
         ExecStop: '/usr/bin/monit quit',
         ExecReload: '/usr/bin/monit reload',
         Restart: 'on-failure',
-        RestartSec: '60s',
+        RestartSec: '60s'
       },
       Install: {
-        WantedBy: 'multi-user.target',
-      },
+        WantedBy: 'multi-user.target'
+      }
     }
   )
   action %i[create enable restart]

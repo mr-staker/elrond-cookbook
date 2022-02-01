@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'spec_helper'
 
 # this is technically not a helper, but it is a convenient way of sharing tests
@@ -28,7 +30,7 @@ describe 'elrond::configure_node: 0' do
     it { should be_running.under('systemd') }
   end
 
-  describe port(37373) do
+  describe port(37_373) do
     it { should be_listening.on('0.0.0.0').with('tcp') }
   end
 

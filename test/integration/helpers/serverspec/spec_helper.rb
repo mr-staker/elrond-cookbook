@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $LOAD_PATH.unshift(*Dir['/opt/cinc/embedded/lib/ruby/gems/**/lib'])
 
 require 'json'

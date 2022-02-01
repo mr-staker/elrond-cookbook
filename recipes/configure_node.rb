@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 include_recipe 'elrond::semanage'
 include_recipe 'elrond::monit'
 include_recipe 'firewalld::default'
@@ -40,8 +42,8 @@ ini_file '/etc/systemd/journald.conf' do
       'Journal' => {
         'Storage' => 'persistent',
         'SystemMaxUse' => '2048M',
-        'SystemMaxFileSize' => '512M',
-      },
+        'SystemMaxFileSize' => '512M'
+      }
     }
   )
 

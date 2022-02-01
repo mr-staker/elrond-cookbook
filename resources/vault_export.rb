@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 resource_name :vault_export
 provides :vault_export
 unified_mode false
@@ -28,11 +30,7 @@ action :export do
 
       ::Vault.address = address
       ::Vault.token = token
-
-      if ssl_ciphers
-        ::Vault.ssl_ciphers = ssl_ciphers
-      end
-
+      ::Vault.ssl_ciphers = ssl_ciphers if ssl_ciphers
       secret = ::Vault.kv(secret_path).read(secret_name)
 
       if secret_key
@@ -41,7 +39,7 @@ action :export do
         ::File.write file_path, YAML.dump(secret.data)
       end
 
-      ::FileUtils.chmod 0400, file_path
+      ::FileUtils.chmod 0o400, file_path
     end
 
     not_if { ::File.exist? file_path }

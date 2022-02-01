@@ -1,8 +1,16 @@
+# frozen_string_literal: true
+
 require 'yaml'
 
-desc 'Runs cookstyle'
+desc 'Runs rubocop'
+task :cop do
+  sh 'rubocop'
+end
+
+desc 'Runs cookstyle and chefstyle'
 task :lint do
   sh 'cookstyle'
+  sh 'chefstyle'
 end
 
 desc 'Runs test for specifiedd instance and destroy'
