@@ -39,7 +39,7 @@ suites:
 - name: observer
   attributes:
     elrond:
-      network: test
+      network: <%= ENV['ELROND_NETWORK'] || 'test' %>
       version: <%= versions[:elrond] %>
       node:
         log_level: '*:INFO'
@@ -56,7 +56,7 @@ suites:
 - name: validator
   attributes:
     elrond:
-      network: test
+      network: <%= ENV['ELROND_NETWORK'] || 'test' %>
       version: <%= versions[:elrond] %>
       node:
         log_level: '*:INFO'
