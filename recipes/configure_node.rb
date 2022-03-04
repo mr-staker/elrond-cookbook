@@ -7,6 +7,11 @@ include_recipe 'firewalld::default'
 var_dir = node['elrond']['system']['var_dir']
 version_change = "#{var_dir}/.version_change"
 
+if platform_family? 'rhel'
+  # RPM doesn't support dashes in version name due to use of epoch
+  node.override['elrond']['version'] = node['elrond']['version'].tr('-', '_')
+end
+
 directory var_dir do
   owner 'root'
   group 'root'
