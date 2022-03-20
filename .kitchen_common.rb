@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 def versions
-  elrond_test = '1.3.10.0'
+  elrond_test = '1.3.12.0'
 
   {
     elrond: ENV['ELROND_VERSION'] || elrond_test,
