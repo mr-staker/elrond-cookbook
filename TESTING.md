@@ -56,6 +56,19 @@ kitchen login observer-ubuntu
 rake integration
 ```
 
+## Testing a custom version / release channel
+
+By default, Test Kitchen is configured for testnet using the latest testnet release. To override the version and release channel, use environment variables:
+
+ * ELROND_VERSION
+ * ELROND_NETWORK
+
+Example:
+
+```bash
+ELROND_VERSION=1.2.38.1 ELROND_NETWORK=main rake test
+```
+
 ## Static code analysis
 
 This is done via Cookstyle. Invoke with:
