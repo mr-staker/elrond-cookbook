@@ -42,8 +42,11 @@ task :verify do
   sh 'kitchen verify -c'
 end
 
-desc 'Runs complete test setup'
+desc 'Runs complete test setup sequentially'
 task test: %i[lint integration]
+
+desc 'Runs complete test setup concurrently'
+task test_multi: %i[lint verify clean]
 
 desc 'Cleanup project'
 task :clean do
