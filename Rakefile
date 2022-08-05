@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'json'
 require 'yaml'
 
 desc 'Runs rubocop'
@@ -39,7 +40,24 @@ end
 
 desc 'Runs concurrent kitchen verify'
 task :verify do
-  sh 'kitchen verify -c'
+  threads = []
+
+  kcfg = YAML.load_file '.kitchen.yml'
+  kcfg['suites'].each do |pl|
+    platform = pl['name']
+    kcfg['platforms'].each do |su|
+      suite = su['name']
+      instance = "#{platform}-#{suite}"
+
+      threads << Thread.new do
+        puts "Run integration test for #{instance}"
+        sh "kitchen verify #{instance}"
+        sh "kitchen destroy #{instance}"
+      end
+    end
+  end
+
+  threads.map(&:join)
 end
 
 desc 'Runs complete test setup sequentially'
