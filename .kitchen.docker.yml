@@ -25,14 +25,14 @@ platforms:
   driver_config:
     platform: ubuntu
     dockerfile: dockerfiles/ubuntu:<%= versions[:ubuntu] %>
-    run_command: /lib/systemd/systemd
+    run_command: /usr/sbin/init
     build_options:
       tag: kitchen-ubuntu:<%= versions[:ubuntu] %>
 - name: oracle
   driver_config:
     platform: rhel
     dockerfile: dockerfiles/oracle:<%= versions[:oracle] %>
-    run_command: /lib/systemd/systemd
+    run_command: /usr/sbin/init
     build_options:
       tag: kitchen-oracle:<%= versions[:oracle] %>
 
