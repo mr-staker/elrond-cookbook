@@ -8,6 +8,7 @@ driver:
   cinc_version: <%= versions[:cinc] %>
   name: docker
   privileged: true
+  socket: false
   volume:
   - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
