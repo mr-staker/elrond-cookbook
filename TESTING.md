@@ -3,7 +3,7 @@
 You must have:
 
  * Cinc Workstation. This cookbook has been developed / tested using [22.1.745](https://cinc.osuosl.org/files/unstable/cinc-workstation/22.1.745/ubuntu/20.04/cinc-workstation_22.1.745-1_amd64.deb). Chef Workstation should work with minor modifications to `.kitchen.docker.yml`.
- * Working Docker setup. This must run under a system with systemd. If you're using Docker Desktop on Windows with WSL2 backend, then [genie](https://github.com/arkane-systems/genie) must be used to setup systemd as init.
+ * Working Docker setup. This must run under a system with systemd. If you're using Docker Desktop on Windows with WSL2 backend, then [genie](https://github.com/arkane-systems/genie) must be used to setup systemd as init. Podman works as alternative under Linux/WSL2. Podman under WSL2 requires genie - the same as Docker.
  * kitchen-docker driver.
 
 The`kitchen-docker` driver is, sadly, not part of Workstation anymore. kitchen-dokken doesn't work with Cinc / thick containers.

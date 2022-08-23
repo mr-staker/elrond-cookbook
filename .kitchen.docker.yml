@@ -8,12 +8,13 @@ driver:
   cinc_version: <%= versions[:cinc] %>
   name: docker
   privileged: true
-  socket: false
+  socket: null
   volume:
   - /sys/fs/cgroup:/sys/fs/cgroup:ro
 
 transport:
   name: docker
+  socket: null
 
 provisioner:
   name: chef_zero
