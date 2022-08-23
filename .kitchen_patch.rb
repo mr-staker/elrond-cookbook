@@ -10,7 +10,7 @@ module Kitchen
       def verify_dependencies
         # rubocop:disable Chef/Deprecations/UsesRunCommandHelper
         # rubocop:disable Chef/Deprecations/ChefSugarHelpers
-        run_command("#{config[:binary]} info >> #{dev_null} 2>&1", quiet: true, use_sudo: config[:use_sudo])
+        run_command("#{config[:binary]} --version >> #{dev_null} 2>&1", quiet: true, use_sudo: config[:use_sudo])
         # rubocop:enable Chef/Deprecations/UsesRunCommandHelper
         # rubocop:enable Chef/Deprecations/ChefSugarHelpers
       rescue
